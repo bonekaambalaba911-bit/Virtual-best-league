@@ -1,0 +1,1477 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<title>Виртуальная лига</title>
+<style>
+:root{--bg:#eef0f3;--sf:#fff;--card:#fff;--tx:#0f1b2d;--mu:#5d6b7e;--ln:#e1e5ea;--bd:#e1e5ea;--pr:#1f4fd8;--ac:#1f4fd8;--prt:#fff;--am:#ffb400;--gr:#1b7a4b;--rd:#e5484d;--navy:#0f1b2d;--sh:none;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--sf:#131c2e;--card:#131c2e;--tx:#e8eef9;--mu:#8b99b1;--ln:#223048;--bd:#223048;--pr:#5b8cff;--ac:#5b8cff;--prt:#0b1220;--navy:#070d18}}
+:root[data-theme="dark"]{--bg:#0b1220;--sf:#131c2e;--card:#131c2e;--tx:#e8eef9;--mu:#8b99b1;--ln:#223048;--bd:#223048;--pr:#5b8cff;--ac:#5b8cff;--prt:#0b1220;--navy:#070d18}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 "Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:9}
+#app{max-width:640px;margin:0 auto;padding:0 14px 120px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;align-items:center;gap:10px;margin:0 -14px 12px;padding:10px 14px;background:var(--bg)}
+.bar h1{flex:1;min-width:0;margin:0;font:600 20px/1.1 Oswald,"Arial Narrow",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{background:var(--sf);border:1px solid var(--ln);border-radius:99px;padding:5px 12px;font-weight:600;font-size:13px;white-space:nowrap}
+.ib{width:38px;height:38px;border-radius:50%;border:1px solid var(--ln);background:var(--sf);color:var(--mu);display:grid;place-items:center;cursor:pointer}
+.view.in{animation:vi .22s ease-out}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));width:min(620px,calc(100% - 20px));display:flex;gap:2px;background:var(--sf);border:1px solid var(--ln);border-radius:24px;padding:6px;box-shadow:0 10px 28px rgba(15,27,45,.14);z-index:10}
+nav button{flex:1;position:relative;border:0;background:none;color:var(--mu);font:500 10.5px "Golos Text",sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0 6px;border-radius:18px;cursor:pointer;transition:background .2s,color .2s}
+nav button.on{color:var(--ac);background:color-mix(in srgb,var(--ac) 13%,transparent)}
+.nb{position:absolute;top:3px;left:calc(50% + 6px);min-width:16px;height:16px;border-radius:8px;background:var(--rd);color:#fff;font:700 10px/16px "Golos Text",sans-serif;text-align:center;padding:0 4px}
+.nb.dot{min-width:9px;height:9px;padding:0;top:5px;left:calc(50% + 8px);animation:bl 1.4s infinite}
+.livepill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:9;background:var(--navy);color:#fff;border:0;border-radius:99px;padding:9px 16px;font:600 13px "Golos Text",sans-serif;display:flex;align-items:center;gap:8px;box-shadow:0 8px 22px rgba(0,0,0,.25);cursor:pointer;animation:up .3s}
+.livepill i{width:8px;height:8px;border-radius:50%;background:var(--rd);animation:bl 1.4s infinite}
+.btn{border:1px solid var(--ln);background:var(--sf);color:var(--tx);padding:9px 16px;border-radius:99px;font:inherit;font-weight:600;font-size:14px;white-space:nowrap;cursor:pointer;transition:transform .12s,background .2s}
+.btn:active{transform:scale(.96)}
+.btn.pr{background:var(--pr);border-color:var(--pr);color:var(--prt)}
+.btn.gh{background:rgba(255,255,255,.14);border-color:transparent;color:#fff}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:18px;padding:14px 16px;margin-bottom:12px}
+.card>b:first-child,h3{display:block;font:600 17px/1.2 Oswald,"Arial Narrow",sans-serif;margin:0 0 8px;letter-spacing:.2px}
+h3{font-size:20px}
+.card.mu{text-align:center;padding:28px 16px}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--ln)}
+.row:last-child{border:0}.row .g{flex:1;min-width:0}.row .g b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.row>b{font:600 20px Oswald,"Arial Narrow",sans-serif;letter-spacing:.5px}
+.mu{color:var(--mu);font-size:13px}
+.logo{width:40px;height:40px;border-radius:11px;object-fit:cover;background:var(--ln);flex:none}
+.crest{display:grid;place-items:center;width:34px;height:40px;flex:none;clip-path:polygon(0 0,100% 0,100% 58%,50% 100%,0 58%);background:linear-gradient(90deg,hsl(var(--h) 58% 38%) 50%,hsl(var(--h) 58% 28%) 50%)}
+.crest i{font:600 17px/1 Oswald,sans-serif;font-style:normal;color:#fff;margin-top:-6px}
+.sm.logo{width:32px;height:32px;border-radius:9px}.sm.crest{width:28px;height:33px}.sm.crest i{font-size:14px}
+.lg.logo{width:64px;height:64px;border-radius:16px}.lg.crest{width:56px;height:66px}.lg.crest i{font-size:28px}
+.big{width:64px;height:64px;border-radius:16px}
+.hero{background:var(--navy);color:#fff;border-radius:22px;padding:16px;margin-bottom:12px}
+.hh{display:flex;align-items:center;gap:14px}.hh .g{flex:1;min-width:0}
+.hero h2{margin:0 0 4px;font:600 25px/1.1 Oswald,"Arial Narrow",sans-serif;overflow:hidden;text-overflow:ellipsis}
+.sub{font-size:13px;opacity:.7}
+.st{display:grid;grid-template-columns:repeat(3,1fr);margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.14)}
+.st div{padding:0 10px;border-left:1px solid rgba(255,255,255,.14)}.st div:first-child{border:0;padding-left:0}
+.st b{display:block;font:600 20px/1.2 Oswald,"Arial Narrow",sans-serif}.st span{font-size:12px;opacity:.65}
+.rt{display:inline-grid;place-items:center;min-width:40px;height:32px;padding:0 6px;border-radius:9px;font:700 17px Oswald,"Arial Narrow",sans-serif;color:#fff;background:#8a96a8}
+.r9{background:var(--am);color:#2a1d00}.r8{background:var(--gr)}.r7{background:var(--pr);color:var(--prt)}
+.pos{display:inline-block;font:600 10.5px "Golos Text",sans-serif;padding:1px 7px;border-radius:99px;margin-right:6px;background:var(--ln);color:var(--mu)}
+.GK{background:rgba(255,170,0,.22);color:#b97700}.DEF{background:rgba(60,110,255,.18);color:#3b6bff}.MID{background:rgba(30,160,90,.2);color:#1f9a58}.FWD{background:rgba(229,72,77,.2);color:#e5484d}
+input{width:100%;padding:12px 14px;border:1px solid var(--ln);border-radius:14px;background:var(--sf);color:var(--tx);font:inherit;margin:4px 0 10px;transition:border-color .2s,box-shadow .2s}
+input:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent)}
+.tbl{overflow-x:auto;padding:6px 10px}table{width:100%;border-collapse:collapse}
+th{font-size:12px;color:var(--mu);font-weight:500}td,th{padding:9px 4px;text-align:center;border-bottom:1px solid var(--ln)}
+td:nth-child(2),th:nth-child(2){text-align:left}tr:last-child td{border:0}
+td b{font-family:Oswald,"Arial Narrow",sans-serif;font-size:16px}
+tr.me td{background:color-mix(in srgb,var(--ac) 11%,transparent);font-weight:600}
+tr.me td:first-child{box-shadow:inset 3px 0 0 var(--ac)}
+.tn{display:flex;align-items:center;gap:8px;white-space:nowrap}.tn .crest{width:20px;height:24px}.tn .crest i{font-size:11px;margin-top:-3px}.tn .logo{width:24px;height:24px;border-radius:7px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chips span{border-radius:99px;padding:4px 12px;font-size:13px;font-weight:500}
+.tv{background:var(--navy);color:#e8eefc;border-radius:22px;padding:16px;margin-bottom:12px}
+.tvh{display:flex;align-items:center;gap:10px;margin-bottom:8px}.tvh b{font:600 17px Oswald,"Arial Narrow",sans-serif}
+.tvh .min{margin-left:auto;font:600 24px Oswald,"Arial Narrow",sans-serif;color:var(--am)}
+.live{background:var(--rd);color:#fff;font-weight:700;font-size:12px;padding:3px 10px;border-radius:99px;animation:bl 1.4s infinite}.live.off{background:#475569;animation:none}
+.sc{display:grid;grid-template-columns:36px 1fr auto 1fr 36px;align-items:center;gap:10px;padding:12px 0;border-top:1px solid rgba(255,255,255,.1)}
+.sc span{font-size:14px;font-weight:600}.sc span:first-of-type{text-align:right}.sc span:last-of-type{text-align:left}
+.sc b{font:600 30px/1 Oswald,"Arial Narrow",sans-serif;color:#fff;background:rgba(255,255,255,.09);padding:6px 14px;border-radius:12px;text-align:center;letter-spacing:1px}
+.sc small{color:var(--am)}
+.feed{margin-top:8px;max-height:58vh;overflow-y:auto}
+.fl{display:flex;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,.08);font-size:14px}
+.fl i{font:600 16px Oswald,"Arial Narrow",sans-serif;font-style:normal;color:var(--am);min-width:34px}
+.fl.gl{background:rgba(255,180,0,.13);margin:2px -10px;padding:10px;border:0;border-radius:12px;font-weight:600}
+.feed .fl:first-child{animation:fi .5s}.feed .fl.gl:first-child{animation:goal 1.4s}
+.tv .mu{color:#8fa0c4}
+.pitch{position:relative;width:100%;aspect-ratio:7/9;border-radius:20px;overflow:hidden;background:repeating-linear-gradient(90deg,#1f8a52 0 12.5%,#1b7a4b 12.5% 25%);margin:10px 0 4px}
+.pitch::before{content:"";position:absolute;inset:3%;border:2px solid rgba(255,255,255,.5);border-radius:6px}
+.pitch .ml{position:absolute;left:3%;right:3%;top:50%;height:2px;background:rgba(255,255,255,.5)}
+.pitch .cc{position:absolute;left:50%;top:50%;width:22%;aspect-ratio:1;border:2px solid rgba(255,255,255,.5);border-radius:50%;transform:translate(-50%,-50%)}
+.pitch .pb{position:absolute;left:25%;right:25%;height:14%;border:2px solid rgba(255,255,255,.5)}
+.pitch .pb.t{top:3%;border-top:0}.pitch .pb.b{bottom:3%;border-bottom:0}
+.sl{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;width:20%;cursor:pointer;transition:transform .2s}
+.sl:active{transform:translate(-50%,-50%) scale(.94)}
+.sl .rt{min-width:36px;width:36px;height:36px;padding:0;border-radius:50%;font-size:15px;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.sl small{margin-top:3px;color:#fff;font-size:10px;font-weight:600;background:rgba(6,18,28,.55);padding:1px 7px;border-radius:99px;text-align:center;line-height:1.3;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl.sel .rt{outline:3px solid var(--am);outline-offset:2px}.sl.bad .rt{border-color:var(--rd)}.sl.em .rt{background:rgba(255,255,255,.2);border-style:dashed}
+.fms{display:flex;gap:6px;overflow-x:auto;padding:4px 0}.fms .btn{padding:6px 14px}
+.ov{position:fixed;inset:0;background:rgba(8,14,26,.55);display:flex;align-items:flex-end;justify-content:center;z-index:99;animation:fi .2s}
+.sheet{background:var(--sf);color:var(--tx);width:100%;max-width:520px;border-radius:24px 24px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px));animation:up .3s cubic-bezier(.2,.8,.2,1)}
+.sheet p{margin:0 0 12px;font-size:16px}.sheet .btn{padding:11px 18px}
+@media (min-width:600px){.ov{align-items:center}.sheet{border-radius:24px}}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:7px;padding:16px 8px 14px;border:1px solid var(--ln);background:var(--sf);color:var(--tx);border-radius:16px;font:inherit;cursor:pointer;transition:transform .15s,border-color .2s}
+.tile:hover{border-color:var(--ac)}.tile:active{transform:scale(.97)}
+.tile b{font:600 16px/1.15 Oswald,"Arial Narrow",sans-serif;text-align:center}.tile span{font-size:12px;color:var(--mu)}
+.spin{width:22px;height:22px;border:3px solid var(--ln);border-top-color:var(--ac);border-radius:50%;margin:0 auto 10px;animation:sp .8s linear infinite}
+.boot{display:grid;justify-items:center;padding-top:40vh;color:var(--mu)}.boot .spin{margin-bottom:10px}
+.btn:disabled{opacity:.5;cursor:default}.btn:disabled:active{transform:none}
+td,.rt,.sc b,.st b{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}input:focus-visible{outline:0}
+.wb{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;background:color-mix(in srgb,var(--gr) 14%,transparent);color:var(--gr)}
+.wb.off{background:color-mix(in srgb,var(--rd) 12%,transparent);color:var(--rd)}.wb i{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.bk{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 14px;scroll-snap-type:x mandatory;margin:0 -14px;padding-left:14px;padding-right:14px;align-items:stretch}
+.bc{flex:0 0 min(76%,270px);scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-around;gap:10px}
+.bc h4{margin:0;font:600 16px Oswald,"Arial Narrow",sans-serif;color:var(--mu)}
+.bm{background:var(--sf);border:1px solid var(--ln);border-radius:12px;overflow:hidden}
+.bt{display:flex;align-items:center;gap:8px;padding:8px 10px}.bt+.bt{border-top:1px solid var(--ln)}
+.bt .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;font-size:14px}
+.bt .n.ph{color:var(--mu);font-weight:500}.bt.l{opacity:.5}
+.bt b{font:600 18px Oswald,"Arial Narrow",sans-serif;min-width:16px;text-align:right}
+.bt .crest{width:20px;height:24px}.bt .crest i{font-size:11px;margin-top:-3px}.bt .logo{width:24px;height:24px;border-radius:7px}
+.bt .crest.ph{background:var(--ln)}
+.bf{padding:4px 10px 6px;font-size:12px;color:var(--mu);border-top:1px solid var(--ln)}
+tr.q td:first-child{box-shadow:inset 3px 0 0 var(--am)}tr.me.q td:first-child{box-shadow:inset 3px 0 0 var(--ac)}
+.qd{display:inline-block;width:3px;height:12px;background:var(--am);margin-right:8px;vertical-align:-1px;border-radius:2px}
+@keyframes sp{to{transform:rotate(1turn)}}
+@keyframes vi{from{opacity:0}}@keyframes fi{from{opacity:0;transform:translateY(-6px)}}@keyframes up{from{transform:translateY(40px);opacity:0}}
+@keyframes bl{50%{opacity:.5}}@keyframes goal{0%{background:rgba(255,180,0,.6)}100%{background:rgba(255,180,0,.13)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style></head><body><div id="app"><div class="boot"><div class="spin"></div>Загрузка…</div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ===== НАСТРОЙКИ: впишите свои значения из Supabase ===== */
+const CFG={url:'https://ncqjouytrzyfrmmxvenj.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jcWpvdXl0cnp5ZnJtbXh2ZW5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNDYwNDAsImV4cCI6MjEwODcyMjA0MH0.ZLBHIo1GY73TqzzksuOUnf0kS9b8cphOpEszH8x1Fq0',admin:'51269402',google:false};
+/* ======================================================== */
+function makeDb(){
+ const sb=window.SB=supabase.createClient(CFG.url,CFG.key),T='docs';
+ const chk=r=>{if(r.error)throw r.error;return r};
+ return{collection:n=>({doc:id=>({
+  set:async d=>chk(await sb.from(T).upsert({coll:n,id,data:d})),
+  create:async d=>chk(await sb.from(T).insert({coll:n,id,data:d})),
+  update:async d=>{const r=chk(await sb.from(T).select('data').eq('coll',n).eq('id',id).maybeSingle());
+   return chk(await sb.from(T).upsert({coll:n,id,data:{...((r.data&&r.data.data)||{}),...d}}))},
+  delete:async()=>chk(await sb.from(T).delete().eq('coll',n).eq('id',id))}),
+ onSnapshot(f,ef){let ready=false;const m={},emit=()=>ready&&f({docs:Object.keys(m).map(k=>({id:k,data:()=>m[k]}))});
+  sb.from(T).select('id,data').eq('coll',n).then(r=>{(r.data||[]).forEach(x=>m[x.id]=x.data);ready=true;emit()});
+  sb.channel('c_'+n+Math.random()).on('postgres_changes',{event:'*',schema:'public',table:T,filter:'coll=eq.'+n},p=>{
+   if(p.eventType==='DELETE')delete m[p.old.id];else m[p.new.id]=p.new.data;emit()}).subscribe();
+  return()=>{}}})};
+}
+function adminLogin(){dlg('Код администратора',{input:'',cancel:1}).then(v=>{if(v===CFG.admin){localStorage.setItem('lg_admin',v);location.reload()}else if(v!==null)alert('Неверный код')})}
+/*LINEUP*/
+const FM={'4-3-3':[['GK',1,88],['DEF',4,68],['MID',3,46],['FWD',3,20]],
+'4-4-2':[['GK',1,88],['DEF',4,68],['MID',4,46],['FWD',2,20]],
+'3-5-2':[['GK',1,88],['DEF',3,68],['MID',5,46],['FWD',2,20]],
+'4-2-3-1':[['GK',1,88],['DEF',4,70],['MID',2,56],['MID',3,36],['FWD',1,16]],
+'5-3-2':[['GK',1,88],['DEF',5,68],['MID',3,46],['FWD',2,20]],
+'3-4-3':[['GK',1,88],['DEF',3,68],['MID',4,46],['FWD',3,20]]};
+function slotsOf(f){const o=[];(FM[f]||FM['4-3-3']).forEach(([pos,n,y])=>{for(let i=0;i<n;i++)o.push({pos,x:(i+1)/(n+1)*100,y})});return o}
+const eff=(p,s)=>p.pos===s.pos?+p.rating:(+p.rating-(p.pos==='GK'||s.pos==='GK'?40:12));
+function buildLU(sq,fm,xi){
+ const used=new Set(),res=slotsOf(fm).map((s,i)=>{const p=sq.find(q=>q.id===xi[i]&&!used.has(q.id));if(p)used.add(p.id);return{s,p}});
+ res.forEach(r=>{if(!r.p){const p=sq.find(q=>!used.has(q.id)&&q.pos===r.s.pos);if(p){r.p=p;used.add(p.id)}}});
+ res.forEach(r=>{if(!r.p){const p=sq.find(q=>!used.has(q.id));if(p){r.p=p;used.add(p.id)}}});
+ res.fm=fm;return res;
+}
+function lineup(c){
+ const sq=players.filter(p=>p.club===c).sort((a,b)=>b.rating-a.rating),cl=clubs.find(x=>x.id===c);
+ if(cl&&cl.fm&&FM[cl.fm])return buildLU(sq,cl.fm,cl.xi||[]);
+ let best=null,bs=-1;
+ for(const f in FM){const r=buildLU(sq,f,[]),v=r.reduce((a,x)=>a+(x.p?eff(x.p,x.s):0),0);if(v>bs){bs=v;best=r}}
+ return best||[];
+}
+const fmOf=c=>{const cl=clubs.find(x=>x.id===c);return cl&&cl.fm&&FM[cl.fm]?cl.fm:(lineup(c).fm||'4-3-3')};
+const xiOf=c=>lineup(c).map(r=>r.p).filter(Boolean);
+const strength=c=>lineup(c).reduce((a,r)=>a+(r.p?eff(r.p,r.s):0),0)/11;
+/*ENDLINEUP*/
+const IC={club:'<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/>',market:'<path d="M7 7h12l-3-3M17 17H5l3 3"/>',table:'<path d="M5 7h14M5 12h14M5 17h14"/>',matches:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',tv:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/>',deals:'<rect x="4" y="8" width="16" height="11" rx="2"/><path d="M9 8V6a3 3 0 016 0v2"/>',admin:'<path d="M5 8h14M5 16h14"/><circle cx="9" cy="8" r="2"/><circle cx="15" cy="16" r="2"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'};
+const ico=k=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]||''}</svg>`;
+const hueOf=s=>{let h=0;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))%360;return h};
+function crestHtml(c,sz){
+ if(c&&c.logo)return `<img class="logo ${sz||''}" src="${c.logo}" alt="">`;
+ const n=String((c&&c.name)||'?').trim();
+ return `<span class="crest ${sz||''}" style="--h:${hueOf(n)}"><i>${esc((n[0]||'?').toUpperCase())}</i></span>`;
+}
+let authUser=null,bound=false,clubsReady=false,mpos='';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const M=v=>'€'+(+v).toLocaleString('ru-RU',{maximumFractionDigits:1})+' млн';
+let db,me,owner=false,clubs=[],players=[],matches=[],offers=[],live=null,sched=null,cupm=[],win=null,mrd=0,season=null,hist=[],mTab='league',tTab='table',seeded=false,tab='club',q='',newName='',newLogo='';
+const col=n=>db.collection(n);
+const myClub=()=>clubs.find(c=>c.id===me);
+const RAW=`Real Madrid
+Thibaut Courtois|GK|89|30
+Dani Carvajal|DEF|85|15
+Éder Militão|DEF|85|35
+Antonio Rüdiger|DEF|86|20
+Dean Huijsen|DEF|82|50
+Aurélien Tchouaméni|MID|85|80
+Federico Valverde|MID|88|120
+Jude Bellingham|MID|90|180
+Arda Güler|MID|83|70
+Vinícius Júnior|FWD|90|150
+Kylian Mbappé|FWD|91|180
+Andriy Lunin|GK|82|25
+Álvaro Carreras|DEF|80|30
+Ferland Mendy|DEF|82|25
+Eduardo Camavinga|MID|83|70
+Rodrygo|FWD|83|70
+FC Barcelona
+Marc-André ter Stegen|GK|87|20
+Jules Koundé|DEF|86|60
+Pau Cubarsí|DEF|84|70
+Ronald Araújo|DEF|85|50
+Alejandro Balde|DEF|83|50
+Pedri|MID|87|100
+Frenkie de Jong|MID|86|50
+Gavi|MID|83|50
+Lamine Yamal|FWD|88|180
+Robert Lewandowski|FWD|87|12
+Raphinha|FWD|87|70
+Wojciech Szczęsny|GK|80|3
+Eric García|DEF|79|20
+Gerard Martín|DEF|78|20
+Dani Olmo|MID|83|50
+Ferran Torres|FWD|80|30
+Manchester City
+Gianluigi Donnarumma|GK|88|45
+Joško Gvardiol|DEF|86|75
+Rúben Dias|DEF|88|75
+Nathan Aké|DEF|83|28
+Rodri|MID|90|110
+Bernardo Silva|MID|87|55
+Phil Foden|MID|86|110
+Tijjani Reijnders|MID|84|55
+Erling Haaland|FWD|91|200
+Jérémy Doku|FWD|83|60
+Rayan Cherki|FWD|83|60
+Stefan Ortega|GK|79|8
+Manuel Akanji|DEF|82|30
+Nico O'Reilly|DEF|80|40
+Mateo Kovačić|MID|81|25
+Omar Marmoush|FWD|83|60
+Liverpool
+Alisson|GK|89|30
+Jeremie Frimpong|DEF|82|40
+Virgil van Dijk|DEF|89|30
+Ibrahima Konaté|DEF|84|45
+Milos Kerkez|DEF|80|35
+Alexis Mac Allister|MID|86|70
+Dominik Szoboszlai|MID|85|80
+Florian Wirtz|MID|86|130
+Mohamed Salah|FWD|89|55
+Alexander Isak|FWD|86|100
+Cody Gakpo|FWD|84|60
+Giorgi Mamardashvili|GK|82|30
+Joe Gomez|DEF|79|20
+Conor Bradley|DEF|78|30
+Ryan Gravenberch|MID|85|80
+Hugo Ekitike|FWD|84|80
+Arsenal
+David Raya|GK|86|35
+Ben White|DEF|85|50
+William Saliba|DEF|87|80
+Gabriel Magalhães|DEF|87|75
+Riccardo Calafiori|DEF|84|55
+Declan Rice|MID|88|120
+Martin Ødegaard|MID|87|75
+Martín Zubimendi|MID|84|60
+Bukayo Saka|FWD|87|130
+Viktor Gyökeres|FWD|86|70
+Gabriel Martinelli|FWD|83|45
+Kepa Arrizabalaga|GK|78|5
+Jurriën Timber|DEF|83|60
+Myles Lewis-Skelly|DEF|78|35
+Eberechi Eze|MID|83|60
+Leandro Trossard|FWD|80|20
+Bayern München
+Manuel Neuer|GK|86|4
+Joshua Kimmich|MID|87|40
+Dayot Upamecano|DEF|84|45
+Kim Min-jae|DEF|83|35
+Alphonso Davies|DEF|83|40
+Aleksandar Pavlović|MID|82|40
+Leon Goretzka|MID|82|25
+Jamal Musiala|MID|87|120
+Michael Olise|FWD|87|100
+Luis Díaz|FWD|85|75
+Harry Kane|FWD|90|100
+Jonas Urbig|GK|76|10
+Hiroki Ito|DEF|80|20
+Konrad Laimer|DEF|80|20
+Raphaël Guerreiro|MID|82|20
+Serge Gnabry|FWD|82|25
+Paris Saint-Germain
+Matvey Safonov|GK|82|20
+Achraf Hakimi|DEF|85|70
+Marquinhos|DEF|86|30
+Willian Pacho|DEF|84|55
+Nuno Mendes|DEF|87|75
+Vitinha|MID|87|90
+Fabián Ruiz|MID|84|45
+João Neves|MID|85|80
+Ousmane Dembélé|FWD|89|80
+Désiré Doué|FWD|85|90
+Khvicha Kvaratskhelia|FWD|87|90
+Lucas Chevalier|GK|82|35
+Lucas Beraldo|DEF|79|20
+Illia Zabarnyi|DEF|80|30
+Warren Zaïre-Emery|MID|82|80
+Bradley Barcola|FWD|84|70
+Manchester United
+André Onana|GK|80|25
+Lisandro Martínez|DEF|83|45
+Matthijs de Ligt|DEF|82|40
+Harry Maguire|DEF|80|10
+Diogo Dalot|DEF|81|30
+Bruno Fernandes|MID|87|55
+Casemiro|MID|82|15
+Kobbie Mainoo|MID|80|55
+Bryan Mbeumo|FWD|84|70
+Matheus Cunha|FWD|84|70
+Benjamin Šeško|FWD|82|75
+Altay Bayındır|GK|76|5
+Leny Yoro|DEF|79|50
+Patrick Dorgu|DEF|77|30
+Youri Tielemans|MID|85|25
+Amad Diallo|FWD|81|45
+Chelsea
+Robert Sánchez|GK|80|25
+Reece James|DEF|84|55
+Levi Colwill|DEF|82|45
+Wesley Fofana|DEF|81|35
+Marc Cucurella|DEF|83|40
+Enzo Fernández|MID|85|85
+Moisés Caicedo|MID|85|90
+Cole Palmer|MID|87|130
+João Pedro|FWD|83|60
+Pedro Neto|FWD|82|55
+Nicolas Jackson|FWD|80|45
+Filip Jørgensen|GK|76|20
+Trevoh Chalobah|DEF|79|25
+Malo Gusto|DEF|79|35
+Andrey Santos|MID|79|40
+Estêvão|FWD|82|80
+Tottenham Hotspur
+Guglielmo Vicario|GK|82|25
+Pedro Porro|DEF|83|40
+Cristian Romero|DEF|85|55
+Micky van de Ven|DEF|83|55
+Destiny Udogie|DEF|81|40
+João Palhinha|MID|82|35
+James Maddison|MID|83|40
+Xavi Simons|MID|83|70
+Mohammed Kudus|FWD|82|50
+Dominic Solanke|FWD|82|45
+Brennan Johnson|FWD|80|35
+Antonín Kinský|GK|75|15
+Radu Drăgușin|DEF|78|25
+Kevin Danso|DEF|79|25
+Sandro Tonali|MID|85|55
+Richarlison|FWD|79|20
+Inter Milan
+Yann Sommer|GK|83|8
+Alessandro Bastoni|DEF|87|70
+Francesco Acerbi|DEF|80|3
+Denzel Dumfries|DEF|82|30
+Federico Dimarco|DEF|84|40
+Nicolò Barella|MID|86|70
+Hakan Çalhanoğlu|MID|86|40
+Henrikh Mkhitaryan|MID|80|4
+Lautaro Martínez|FWD|88|100
+Marcus Thuram|FWD|86|70
+Pio Esposito|FWD|77|25
+Josep Martínez|GK|77|10
+Yann Bisseck|DEF|80|30
+Carlos Augusto|DEF|79|20
+Davide Frattesi|MID|80|30
+Ange-Yoan Bonny|FWD|78|20
+AC Milan
+Mike Maignan|GK|87|35
+Fikayo Tomori|DEF|82|30
+Strahinja Pavlović|DEF|80|25
+Matteo Gabbia|DEF|78|12
+Pervis Estupiñán|DEF|80|25
+Luka Modrić|MID|84|4
+Adrien Rabiot|MID|83|30
+Youssouf Fofana|MID|80|25
+Christian Pulisic|FWD|83|45
+Rafael Leão|FWD|86|75
+Santiago Giménez|FWD|80|40
+Pietro Terracciano|GK|74|2
+Malick Thiaw|DEF|82|35
+Álex Jiménez|DEF|78|20
+Ruben Loftus-Cheek|MID|80|15
+Christopher Nkunku|FWD|82|35
+Juventus
+Michele Di Gregorio|GK|81|18
+Gleison Bremer|DEF|85|50
+Pierre Kalulu|DEF|80|28
+Federico Gatti|DEF|79|25
+Andrea Cambiaso|DEF|82|45
+Manuel Locatelli|MID|82|35
+Khéphren Thuram|MID|82|40
+Teun Koopmeiners|MID|83|45
+Kenan Yıldız|FWD|85|90
+Dušan Vlahović|FWD|83|40
+Jonathan David|FWD|82|45
+Mattia Perin|GK|76|2
+Lloyd Kelly|DEF|79|20
+Alberto Costa|DEF|77|15
+Weston McKennie|MID|80|25
+Francisco Conceição|FWD|81|40
+Atlético Madrid
+Jan Oblak|GK|86|20
+Marcos Llorente|DEF|82|30
+José María Giménez|DEF|83|25
+Robin Le Normand|DEF|82|30
+Nahuel Molina|DEF|81|25
+Koke|MID|82|8
+Pablo Barrios|MID|80|45
+Rodrigo De Paul|MID|83|25
+Antoine Griezmann|FWD|85|25
+Julián Álvarez|FWD|87|90
+Alexander Sørloth|FWD|80|25
+Juan Musso|GK|79|10
+Clément Lenglet|DEF|79|10
+David Hancko|DEF|80|30
+Conor Gallagher|MID|82|40
+Giuliano Simeone|FWD|80|30
+Borussia Dortmund
+Gregor Kobel|GK|86|45
+Nico Schlotterbeck|DEF|84|40
+Waldemar Anton|DEF|82|22
+Niklas Süle|DEF|79|12
+Julian Ryerson|DEF|80|22
+Felix Nmecha|MID|80|30
+Pascal Groß|MID|80|10
+Julian Brandt|MID|83|35
+Serhou Guirassy|FWD|85|55
+Karim Adeyemi|FWD|80|35
+Maximilian Beier|FWD|80|35
+Alexander Meyer|GK|77|5
+Ramy Bensebaini|DEF|80|10
+Daniel Svensson|DEF|78|20
+Marcel Sabitzer|MID|80|12
+Fábio Silva|FWD|78|20
+SSC Napoli
+Alex Meret|GK|82|12
+Giovanni Di Lorenzo|DEF|82|12
+Alessandro Buongiorno|DEF|83|40
+Amir Rrahmani|DEF|82|25
+Leonardo Spinazzola|DEF|79|8
+Scott McTominay|MID|84|40
+Stanislav Lobotka|MID|82|28
+Billy Gilmour|MID|79|15
+David Neres|FWD|82|35
+Romelu Lukaku|FWD|81|8
+Rasmus Højlund|FWD|79|30
+Vanja Milinković-Savić|GK|79|15
+Sam Beukema|DEF|82|30
+Juan Jesus|DEF|76|2
+Antonio Vergara|MID|77|15
+Noa Lang|FWD|80|25
+Newcastle United
+Nick Pope|GK|80|8
+Kieran Trippier|DEF|80|8
+Sven Botman|DEF|83|45
+Fabian Schär|DEF|80|8
+Tino Livramento|DEF|82|40
+Joelinton|MID|82|35
+Joe Willock|MID|78|20
+Lewis Miley|MID|77|25
+Anthony Gordon|FWD|84|70
+Yoane Wissa|FWD|80|30
+Nick Woltemade|FWD|82|60
+Aaron Ramsdale|GK|78|15
+Dan Burn|DEF|78|8
+Lewis Hall|DEF|80|35
+Jacob Ramsey|MID|79|35
+Harvey Barnes|FWD|80|30
+Aston Villa
+Emiliano Martínez|GK|85|25
+Matty Cash|DEF|80|25
+Ezri Konsa|DEF|82|30
+Pau Torres|DEF|81|25
+Lucas Digne|DEF|79|8
+John McGinn|MID|81|25
+Amadou Onana|MID|81|40
+Morgan Rogers|MID|84|80
+Ollie Watkins|FWD|82|40
+Leon Bailey|FWD|79|15
+Donyell Malen|FWD|80|35
+Marco Bizot|GK|76|5
+Tyrone Mings|DEF|77|5
+Ian Maatsen|DEF|79|30
+Boubacar Kamara|MID|82|35
+Jadon Sancho|FWD|79|25
+Bayer Leverkusen
+Mark Flekken|GK|78|10
+Jeanuël Belocian|DEF|80|30
+Jarrell Quansah|DEF|80|30
+Edmond Tapsoba|DEF|82|35
+Alejandro Grimaldo|DEF|84|35
+Exequiel Palacios|MID|82|30
+Aleix García|MID|80|25
+Malik Tillman|MID|80|30
+Patrik Schick|FWD|82|30
+Christian Kofane|FWD|76|20
+Nathan Tella|FWD|78|15
+Janis Blaswich|GK|76|3
+Loïc Badé|DEF|78|15
+Nordi Mukiele|DEF|78|12
+Arthur Vermeeren|MID|79|25
+Martin Terrier|FWD|79|15
+RB Leipzig
+Péter Gulácsi|GK|80|5
+Lutsharel Geertruida|DEF|82|35
+Castello Lukeba|DEF|84|60
+Willi Orbán|DEF|79|8
+David Raum|DEF|81|20
+Christoph Baumgartner|MID|80|30
+Nicolas Seiwald|MID|80|30
+Assan Ouédraogo|MID|77|25
+Yan Diomande|FWD|80|50
+Antonio Nusa|FWD|79|30
+Johan Bakayoko|FWD|80|30
+Maarten Vandevoordt|GK|79|20
+Ridle Baku|DEF|79|20
+Max Finkgräfe|DEF|77|12
+Amadou Haidara|MID|78|12
+Conrad Harder|FWD|77|20
+AS Roma
+Mile Svilar|GK|84|35
+Zeki Çelik|DEF|78|12
+Gianluca Mancini|DEF|81|18
+Evan Ndicka|DEF|82|30
+Angeliño|DEF|80|15
+Manu Koné|MID|83|40
+Lorenzo Pellegrini|MID|80|20
+Bryan Cristante|MID|79|10
+Paulo Dybala|FWD|82|10
+Artem Dovbyk|FWD|80|22
+Matías Soulé|FWD|81|40
+Pierluigi Gollini|GK|74|2
+Wesley França|DEF|78|20
+Mario Hermoso|DEF|80|10
+Niccolò Pisilli|MID|77|20
+Evan Ferguson|FWD|78|25
+Atalanta
+Marco Carnesecchi|GK|83|30
+Berat Djimsiti|DEF|80|10
+Isak Hien|DEF|81|25
+Odilon Kossounou|DEF|80|25
+Raoul Bellanova|DEF|80|25
+Marten de Roon|MID|79|5
+Éderson|MID|82|35
+Lazar Samardžić|MID|80|30
+Ademola Lookman|FWD|84|60
+Charles De Ketelaere|FWD|82|40
+Gianluca Scamacca|FWD|80|30
+Rui Patrício|GK|77|2
+Sead Kolašinac|DEF|77|3
+Lorenzo Bernasconi|DEF|74|10
+Mario Pašalić|MID|80|15
+Nikola Krstović|FWD|77|20
+Olympique de Marseille
+Gerónimo Rulli|GK|80|12
+Amir Murillo|DEF|78|15
+Leonardo Balerdi|DEF|80|20
+CJ Egan-Riley|DEF|77|15
+Nuno Tavares|DEF|78|15
+Pierre-Emile Højbjerg|MID|82|15
+Matt O'Riley|MID|79|25
+Angel Gomes|MID|79|12
+Mason Greenwood|FWD|83|40
+Amine Gouiri|FWD|80|30
+Pierre-Emerick Aubameyang|FWD|77|3
+Jeffrey de Lange|GK|74|3
+Facundo Medina|DEF|78|15
+Benjamin Pavard|DEF|82|15
+Geoffrey Kondogbia|MID|78|6
+Igor Paixão|FWD|79|20
+AS Monaco
+Philipp Köhn|GK|77|10
+Vanderson|DEF|79|25
+Thilo Kehrer|DEF|78|10
+Mohammed Salisu|DEF|79|15
+Caio Henrique|DEF|78|15
+Lamine Camara|MID|80|40
+Denis Zakaria|MID|78|15
+Maghnes Akliouche|MID|82|50
+Folarin Balogun|FWD|81|35
+Eliesse Ben Seghir|FWD|79|25
+Takumi Minamino|FWD|77|6
+Lukas Hradecky|GK|79|3
+Ismail Jakobs|DEF|77|12
+Christian Mawissa|DEF|74|15
+Aleksandr Golovin|MID|79|15
+George Ilenikhena|FWD|77|20
+SL Benfica
+Anatoliy Trubin|GK|82|30
+Alexander Bah|DEF|78|15
+Nicolás Otamendi|DEF|78|3
+António Silva|DEF|82|40
+Samuel Dahl|DEF|77|12
+Florentino Luís|MID|79|18
+Orkun Kökçü|MID|82|30
+Fredrik Aursnes|MID|79|12
+Ángel Di María|FWD|79|4
+Vangelis Pavlidis|FWD|82|30
+Andreas Schjelderup|FWD|79|25
+Samuel Soares|GK|74|5
+Tomás Araújo|DEF|79|25
+Adrián Bajrami|DEF|74|8
+Richard Ríos|MID|80|30
+Arthur Cabral|FWD|77|10
+FC Porto
+Diogo Costa|GK|85|40
+João Mário|DEF|78|15
+Jakub Kiwior|DEF|80|25
+Nehuén Pérez|DEF|79|15
+Francisco Moura|DEF|78|12
+Alan Varela|MID|80|25
+Victor Froholdt|MID|78|20
+Gabri Veiga|MID|79|25
+Samu Aghehowa|FWD|82|40
+Rodrigo Mora|FWD|80|30
+William Gomes|FWD|78|20
+Cláudio Ramos|GK|74|2
+Martim Fernandes|DEF|77|12
+Zaidu Sanusi|DEF|77|8
+Pepê|MID|80|25
+Oskar Pietuszewski|FWD|76|20
+Sporting CP
+Rui Silva|GK|80|12
+Iván Fresneda|DEF|78|15
+Ousmane Diomande|DEF|81|30
+Gonçalo Inácio|DEF|83|40
+Maxi Araújo|DEF|79|20
+Morten Hjulmand|MID|83|40
+Pedro Gonçalves|MID|82|30
+Hidemasa Morita|MID|79|12
+Geovany Quenda|FWD|80|45
+Francisco Trincão|FWD|81|25
+Luis Suárez|FWD|82|30
+Franco Israel|GK|77|6
+Zeno Debast|DEF|80|20
+Eduardo Quaresma|DEF|78|15
+Daniel Bragança|MID|78|15
+Fotis Ioannidis|FWD|77|10
+Ajax
+Vítězslav Jaroš|GK|76|8
+Jorrel Hato|DEF|80|35
+Anton Gaaei|DEF|77|12
+Josip Šutalo|DEF|78|20
+Youri Baas|DEF|77|15
+Kenneth Taylor|MID|79|25
+Jordan Henderson|MID|76|2
+Mika Godts|MID|79|25
+Brian Brobbey|FWD|80|30
+Wout Weghorst|FWD|76|3
+Steven Berghuis|FWD|76|4
+Remko Pasveer|GK|74|1
+Lucas Rosa|DEF|76|8
+Devyne Rensch|DEF|76|10
+Davy Klaassen|MID|77|6
+Christian Rasmussen|FWD|75|8
+PSV Eindhoven
+Matej Kovář|GK|77|8
+Jordan Teze|DEF|78|15
+Ryan Flamingo|DEF|76|10
+Sergiño Dest|DEF|79|25
+Mauro Júnior|DEF|78|15
+Jerdy Schouten|MID|79|12
+Ismael Saibari|MID|81|30
+Joey Veerman|MID|80|25
+Couhaib Driouech|FWD|77|10
+Ricardo Pepi|FWD|77|12
+Dennis Man|FWD|77|8
+Joël Drommel|GK|74|2
+Olivier Boscagli|DEF|79|12
+Armando Obispo|DEF|75|5
+Guus Til|MID|77|10
+Ivan Perišić|FWD|77|2
+Galatasaray
+Uğurcan Çakır|GK|80|12
+Wilfried Singo|DEF|79|20
+Davinson Sánchez|DEF|78|8
+Abdülkerim Bardakcı|DEF|77|8
+Eren Elmalı|DEF|76|10
+Lucas Torreira|MID|80|12
+Gabriel Sara|MID|82|30
+İlkay Gündoğan|MID|81|8
+Barış Alper Yılmaz|FWD|80|25
+Victor Osimhen|FWD|86|75
+Leroy Sané|FWD|82|25
+Günay Güvenç|GK|74|2
+Kaan Ayhan|DEF|76|5
+Metehan Baltacı|DEF|75|5
+Yunus Akgün|MID|78|15
+Mauro Icardi|FWD|79|4
+Athletic Club
+Unai Simón|GK|84|30
+Óscar de Marcos|DEF|76|1
+Dani Vivian|DEF|82|35
+Aymeric Laporte|DEF|82|10
+Yuri Berchiche|DEF|78|5
+Mikel Jauregizar|MID|80|35
+Oihan Sancet|MID|82|40
+Álex Berenguer|MID|78|12
+Iñaki Williams|FWD|80|15
+Nico Williams|FWD|85|80
+Gorka Guruzeta|FWD|78|12
+Julen Agirrezabala|GK|76|6
+Adama Boiro|DEF|76|8
+Yeray Álvarez|DEF|80|15
+Beñat Prados|MID|76|10
+Maroan Sannadi|FWD|74|8
+Villarreal
+Luiz Júnior|GK|78|8
+Juan Foyth|DEF|80|15
+Rafa Marín|DEF|79|20
+Willy Kambwala|DEF|77|10
+Alfonso Pedraza|DEF|78|8
+Pape Gueye|MID|79|15
+Dani Parejo|MID|79|3
+Santi Comesaña|MID|79|15
+Gerard Moreno|FWD|79|8
+Ayoze Pérez|FWD|78|5
+Alberto Moleiro|FWD|83|50
+Arnau Tenas|GK|72|2
+Sergi Cardona|DEF|77|8
+Logan Costa|DEF|78|12
+Étienne Capoue|MID|77|3
+Tajon Buchanan|FWD|77|10`;
+const PRE=[];RAW.split(/\r?\n/).forEach(l=>{if(!l.includes('|'))PRE.push({id:'pre'+PRE.length,name:l.trim(),pl:[]});else PRE[PRE.length-1].pl.push(l.split('|'))});
+const RATES={"Thibaut Courtois": 90, "Jude Bellingham": 90, "Kylian Mbappé": 91, "Vinícius Júnior": 89, "Pedri": 90, "Lamine Yamal": 90, "Raphinha": 88, "Pau Cubarsí": 86, "Erling Haaland": 91, "Rodri": 90, "Gianluigi Donnarumma": 89, "Rúben Dias": 87, "Rayan Cherki": 86, "Virgil van Dijk": 88, "Alisson": 87, "Florian Wirtz": 86, "Alexander Isak": 86, "Mohamed Salah": 87, "Gabriel Magalhães": 89, "William Saliba": 88, "David Raya": 87, "Declan Rice": 88, "Bukayo Saka": 87, "Martin Ødegaard": 86, "Viktor Gyökeres": 86, "Harry Kane": 90, "Michael Olise": 90, "Joshua Kimmich": 88, "Luis Díaz": 88, "Ousmane Dembélé": 90, "Vitinha": 90, "Khvicha Kvaratskhelia": 89, "Nuno Mendes": 89, "Willian Pacho": 89, "João Neves": 88, "Marquinhos": 87, "Bruno Fernandes": 89, "Enzo Fernández": 86, "Moisés Caicedo": 86, "Cole Palmer": 85, "Mike Maignan": 87, "Lautaro Martínez": 87, "Nico Schlotterbeck": 87, "Jan Oblak": 88, "Scott McTominay": 86, "Federico Dimarco": 86, "Sandro Tonali": 85, "Youri Tielemans": 85, "Emiliano Martínez": 85};
+PRE.forEach(c=>c.pl.forEach(x=>{if(RATES[x[0]])x[2]=RATES[x[0]]}));
+const isAI=id=>/^pre\d+$/.test(id||'');
+const allClubs=()=>[...clubs,...PRE.filter(p=>!clubs.some(c=>c.preset===p.id)).map(p=>({id:p.id,name:p.name,budget:0}))];
+const myTurn=o=>o.status==='open'&&((o.turn==='seller'&&o.seller===me)||(o.turn==='buyer'&&o.buyer===me));
+const cname=id=>(allClubs().find(c=>c.id===id)||{}).name||'—';
+const clogo=id=>crestHtml(allClubs().find(x=>x.id===id));
+const DEMO=`Kylian Mbappé|FWD|91|180
+Erling Haaland|FWD|91|200
+Jude Bellingham|MID|90|180
+Vinícius Júnior|FWD|90|170
+Lamine Yamal|FWD|88|180
+Rodri|MID|90|110
+Mohamed Salah|FWD|89|55
+Kevin De Bruyne|MID|88|25
+Harry Kane|FWD|90|100
+Bukayo Saka|FWD|87|130
+Jamal Musiala|MID|87|120
+Pedri|MID|87|100
+Thibaut Courtois|GK|89|30
+Alisson|GK|89|30
+Virgil van Dijk|DEF|89|30
+William Saliba|DEF|87|80
+Joško Gvardiol|DEF|86|75
+Achraf Hakimi|DEF|85|70
+Trent Alexander-Arnold|DEF|86|70
+Federico Valverde|MID|88|130
+Rúben Dias|DEF|88|75
+Raphinha|FWD|87|70
+Marc-André ter Stegen|GK|87|20
+Antonio Rüdiger|DEF|86|25`;
+(async()=>{
+ try{me=localStorage.getItem('lg_uid');if(!me){me='u_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('lg_uid',me)}
+  owner=localStorage.getItem('lg_admin')===CFG.admin}catch(e){me='u_'+Math.random().toString(36).slice(2,10)}
+ try{db=makeDb();authInit()}catch(e){}
+ if(!db||!me){$('#app').innerHTML='<div class="card">Не удалось подключиться к базе. Проверьте настройки Supabase в начале файла.</div>';return}
+ const sub=(n,f)=>col(n).onSnapshot(s=>{f(s.docs.map(d=>({id:d.id,...d.data()})));render()},()=>{});
+ sub('clubs',a=>{clubs=a;clubsReady=true;bindAccount()});sub('matches',a=>matches=a);sub('offers',a=>offers=a);sub('cupm',a=>cupm=a);sub('hist',a=>hist=a);sub('live',a=>{live=a.find(x=>x.id==='now')||null;sched=a.find(x=>x.id==='sched')||null;win=a.find(x=>x.id==='win')||null;season=a.find(x=>x.id==='season')||null});sub('players',a=>{players=a;if(!seeded){seeded=true;(async()=>{if(a.filter(p=>/^pre\d+_/.test(p.id)).length<PRE.reduce((n,c)=>n+c.pl.length,0))await seed();await fixRatings();await fixAges();if(owner){await new Promise(r=>setTimeout(r,1500));await dedupe()}})()}});
+ render();
+})();
+let lastTab=null;
+function render(){
+ if(!db)return;
+ const nt=live&&live.status==='on'&&Date.now()-(live.ts||0)<45000;
+ const tabs=[['club','Клуб'],['market','Рынок'],['table','Лига'],['matches','Матчи'],['tv','Эфир',nt?'●':''],['deals','Сделки',offers.filter(myTurn).length||'']];
+ if(owner)tabs.push(['admin','Админ']);
+ const c=myClub(),anim=lastTab!==tab;lastTab=tab;
+ const bar=`<header class="bar">${c?crestHtml(c,'sm'):''}<h1>${c?esc(c.name):'Виртуальная лига'}</h1>${c?`<span class="pill">${M(c.budget)}</span>`:''}${!owner?`<button class="ib" onclick="adminLogin()" aria-label="Вход администратора">${ico('key')}</button>`:''}</header>`;
+ const pill=nt&&tab!=='tv'?`<button class="livepill" onclick="tab='tv';render()"><i></i>Идёт эфир${live.minute?', '+live.minute+"'":''}</button>`:'';
+ $('#app').innerHTML=bar+`<main class="view${anim?' in':''}">`+schedBanner()+({club:vClub,tv:vTV,deals:vDeals,market:vMarket,table:vTable,matches:vMatches,admin:vAdmin}[tab])()+'</main>'+pill+'<nav>'+tabs.map(t=>`<button class="${tab===t[0]?'on':''}" onclick="tab='${t[0]}';window.scrollTo(0,0);render()">${ico(t[0])}<span>${t[1]}</span>${t[2]?`<b class="nb${t[2]==='●'?' dot':''}">${t[2]==='●'?'':t[2]}</b>`:''}</button>`).join('')+'</nav>';
+}
+function row(p,btn){return `<div class="row"><span class="rt r${p.rating>=90?9:p.rating>=85?8:p.rating>=80?7:6}">${p.rating}</span><div class="g"><b>${esc(p.name)}</b><div class="mu"><span class="pos ${esc(p.pos)}">${esc(p.pos)}</span>${M(p.value)}${p.age?' · '+p.age+' л.':''}${p.d?` · <span style="color:var(--${p.d>0?'gr':'rd'})">${p.d>0?'▲':'▼'}${Math.abs(p.d)}</span>`:''}${p.club?' · '+esc(cname(p.club))+(isAI(p.club)?' (без владельца)':''):' · свободный агент'}</div></div>${btn||''}</div>`}
+function vClub0(){
+ const c=myClub();
+ if(!c)return claimCard()+`<div class="card"><h3>Или создайте свой клуб</h3><input id="nm" placeholder="Название клуба" value="${esc(newName)}" oninput="newName=this.value"><input type="file" accept="image/*" onchange="pickLogo(this)">${newLogo?`<img class="logo big" src="${newLogo}">`:''}<button class="btn pr" onclick="makeClub()">Создать (бюджет €300 млн)</button></div>`;
+ const sq=players.filter(p=>p.club===me).sort((a,b)=>b.rating-a.rating);
+ return `<section class="hero"><div class="hh">${crestHtml(c,'lg')}<div class="g"><h2>${esc(c.name)}</h2><div class="sub">Схема ${fmOf(me)} · игроков: ${sq.length}</div></div><button class="btn gh" onclick="leaveClub()">Сменить</button></div><div class="st"><div><b>${M(c.budget).replace(' млн','M')}</b><span>Бюджет</span></div><div><b>${sq.length?strength(me).toFixed(1):'—'}</b><span>Сила команды</span></div><div><b>${lineup(me).filter(r=>r.p).length}/11</b><span>В старте</span></div></div></section>
+ ${lineupCard(sq)}`;
+}
+function vMarket(){
+ const k=q.toLowerCase();
+ const list=players.filter(p=>p.club!==me&&(!mpos||p.pos===mpos)&&(!k||(p.name+' '+p.pos).toLowerCase().includes(k))).sort((a,b)=>b.rating-a.rating).slice(0,60);
+ return winBanner()+`<input id="q" placeholder="Поиск игрока или позиции" value="${esc(q)}" oninput="q=this.value;render();const e=$('#q');e.focus();e.setSelectionRange(q.length,q.length)">
+ <div class="fms">${['','GK','DEF','MID','FWD'].map(x=>`<button class="btn${mpos===x?' pr':''}" onclick="mpos='${x}';render()">${x||'Все'}</button>`).join('')}</div>
+ <div class="card">${list.map(p=>row(p,myClub()?(p.club?(isAI(p.club)?`<button class="btn" disabled>Нет владельца</button>`:`<button class="btn pr" onclick="offer('${p.id}')"${winOpen()?'':' disabled'}>Предложить</button>`):`<button class="btn pr" onclick="buy('${p.id}')"${winOpen()?'':' disabled'}>${M(p.value)}</button>`):'')).join('')||'<div class="mu">Игроков нет. Администратор может загрузить базу во вкладке «Админ».</div>'}</div>`;
+}
+function standings(){
+ const t={};allClubs().forEach(c=>t[c.id]={id:c.id,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0});
+ matches.filter(m=>m.done).forEach(m=>{const h=t[m.h],a=t[m.a];if(!h||!a)return;h.p++;a.p++;h.gf+=m.hg;h.ga+=m.ag;a.gf+=m.ag;a.ga+=m.hg;
+  if(m.hg>m.ag){h.w++;a.l++;h.pts+=3}else if(m.hg<m.ag){a.w++;h.l++;a.pts+=3}else{h.d++;a.d++;h.pts++;a.pts++}});
+ return Object.values(t).sort((x,y)=>y.pts-x.pts||(y.gf-y.ga)-(x.gf-x.ga)||y.gf-x.gf);
+}
+function vTable0(){
+ const s=standings();
+ return `<div class="card tbl"><table><tr><th>#</th><th>Клуб</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>РМ</th><th>О</th></tr>${s.map((r,i)=>`<tr class="${r.id===me?'me ':''}${i<16?'q':''}"><td>${i+1}</td><td><span class="tn">${clogo(r.id)}${esc(cname(r.id))}</span></td><td>${r.p}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td><td>${r.gf-r.ga}</td><td><b>${r.pts}</b></td></tr>`).join('')}</table></div><div class="mu" style="margin:-4px 2px 12px"><span class="qd"></span>Первые 16 клубов выходят в Лигу чемпионов</div>`;
+}
+function vMatches0(){
+ if(!matches.length)return '<div class="card mu">Сезон ещё не начат.</div>';
+ const rs=[...new Set(matches.map(m=>m.round))].sort((a,b)=>a-b);
+ const open=matches.filter(m=>!m.done),cur=open.length?Math.min(...open.map(m=>m.round)):rs[rs.length-1],r=rs.includes(mrd)?mrd:cur,i=rs.indexOf(r);
+ const nav=`<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px"><button class="btn" ${i?'':'disabled'} onclick="mrd=${rs[i-1]};render()">‹</button><b>Тур ${r} из ${rs.length}</b><button class="btn" ${i<rs.length-1?'':'disabled'} onclick="mrd=${rs[i+1]};render()">›</button></div>`;
+ return nav+`<div class="card">${matches.filter(m=>m.round===r).sort((x,y)=>x.id.localeCompare(y.id)).map(m=>`<div class="row">${clogo(m.h)}<div class="g">${esc(cname(m.h))}</div><b>${m.done?m.hg+' : '+m.ag:'– : –'}</b><div class="g" style="text-align:right">${esc(cname(m.a))}</div>${clogo(m.a)}</div>`).join('')}</div>`;
+}
+function vAdmin(){return adminSeason()+adminWin()+adminLive()+adminCup()+adminSched()+vAdmin0()}
+function vAdmin0(){
+ return `<div class="card"><b>База игроков</b><p class="mu">CSV: имя, позиция, рейтинг, стоимость (в млн €). Если игрок уже есть в лиге, ему обновятся рейтинг и цена, а новые игроки добавятся как свободные агенты. Позиции можно писать и как в игре (ST, CM, CB).</p><input type="file" accept=".csv,.txt" onchange="importCsv(this)"><button class="btn" onclick="seed()">Загрузить составы клубов</button> <button class="btn" onclick="dedupe()">Убрать дубли игроков</button><p class="mu">Игроков в базе: ${players.length}</p></div>
+ <div class="card"><b>Чемпионат</b><p class="mu">Клубов: ${allClubs().length}. Кругов выбирается при запуске: один (каждый с каждым) или два (дома и в гостях).</p><button class="btn pr" onclick="startSeason()">Начать новый сезон</button> <button class="btn pr" onclick="goLive()">📺 Следующий матч в эфир</button> <button class="btn" onclick="playRound()">Сыграть тур сразу</button></div>`;
+}
+function pickLogo(el){
+ const f=el.files[0];if(!f)return;const im=new Image();
+ im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d'),s=Math.min(im.width,im.height);
+  x.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,96,96);newLogo=c.toDataURL('image/webp',.8);render()};
+ im.src=URL.createObjectURL(f);
+}
+async function makeClub(){
+ const nm=newName.trim().slice(0,30),bad=checkName(nm);
+ if(bad)return alert(bad);
+ const key=nameKey(nm,1),r=await reserve('names',key,{owner:me});
+ if(r!==true)return alert(r==='taken'?'Клуб с таким названием уже есть':'Нет связи с базой, попробуйте ещё раз');
+ try{await col('clubs').doc(me).set({name:nm,logo:newLogo,budget:300,owner:me,nk:key,...(authUser?{uid:authUser.id}:{})})}
+ catch(e){try{await col('names').doc(key).delete()}catch(x){}alert('Не удалось создать клуб. '+(e.message||''))}
+}
+async function buy(id){
+ if(!winOpen())return alert('Трансферное окно закрыто. Его открывает администратор.');
+ const p=players.find(x=>x.id===id),c=myClub();if(!p||!c||p.club===me)return;
+ const price=p.club?p.price:p.value;
+ if(c.budget<price)return alert('Не хватает бюджета');
+ try{
+  await col('players').doc(id).update({club:me,listed:false});
+  await col('clubs').doc(me).update({budget:+(c.budget-price).toFixed(2)});
+  const s=clubs.find(x=>x.id===p.club);
+  if(s)await col('clubs').doc(s.id).update({budget:+(s.budget+price).toFixed(2)});
+ }catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+async function listP(id){
+ const p=players.find(x=>x.id===id);if(!p)return;
+ try{
+  if(p.listed)return await col('players').doc(id).update({listed:false});
+  const v=prompt('Цена продажи, млн €',p.value);if(v===null)return;
+  const n=parseFloat(String(v).replace(',','.'));if(!(n>0))return;
+  await col('players').doc(id).update({listed:true,price:n});
+ }catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+async function addPlayers(rows){
+ const b=Date.now();
+ for(let i=0;i<rows.length;i++){const[n,pos,r,v]=rows[i];
+  await col('players').doc('p'+b+'_'+i).set({name:n,pos:pos,rating:r,value:v,club:'',listed:false,price:0})}
+ alert('Загружено: '+rows.length);
+}
+function demo(){addPlayers(DEMO.split('\n').map(l=>{const a=l.split('|');return[a[0],a[1],+a[2],+a[3]]}))}
+function importCsv(el){
+ const f=el.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{const rows=r.result.split(/\r?\n/).map(l=>l.split(/[;,\t]/).map(s=>s.trim())).filter(a=>a.length>=4&&+a[2]>0).map(a=>[a[0],a[1],+a[2],parseFloat(a[3].replace(',','.'))||0]);syncPlayers(rows)};
+ r.readAsText(f);
+}
+function fixtures(ids,dbl){
+ const a=ids.slice();if(a.length%2)a.push(null);const n=a.length,out=[];
+ for(let r=0;r<n-1;r++){
+  for(let i=0;i<n/2;i++){const h=a[i],g=a[n-1-i];if(h&&g)out.push(r%2?{h:g,a:h,round:r+1}:{h,a:g,round:r+1})}
+  a.splice(1,0,a.pop());
+ }
+ return dbl?out.concat(out.map(m=>({h:m.a,a:m.h,round:m.round+n-1}))):out;
+}
+async function startSeason(){
+ const n=allClubs().length;if(n<2)return alert('Нужно минимум 2 клуба');
+ const rounds=parseInt(await dlg('Сколько кругов в чемпионате: 1 (каждый с каждым один раз) или 2 (дома и в гостях)? Старые матчи удалятся.',{input:n>16?1:2,cancel:1}));
+ if(!(rounds===1||rounds===2))return;
+ try{
+  for(let i=0;i<matches.length;i+=10)await Promise.all(matches.slice(i,i+10).map(m=>col('matches').doc(m.id).delete()));
+  const f=fixtures(allClubs().map(c=>c.id),rounds===2);
+  for(let i=0;i<f.length;i+=10)await Promise.all(f.slice(i,i+10).map((x,k)=>col('matches').doc('m'+String(i+k).padStart(4,'0')).set({...x,done:false,hg:0,ag:0})));
+ }catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+const pois=l=>{const L=Math.exp(-l);let k=0,p=1;do{k++;p*=Math.random()}while(p>L);return k-1};
+async function playRound(){
+ const open=matches.filter(m=>!m.done);if(!open.length)return alert('Сезон завершён или не начат');
+ const r=Math.min(...open.map(m=>m.round));
+ for(const m of open.filter(m=>m.round===r)){
+  const d=strength(m.h)-strength(m.a);
+  const hg=pois(lam(m.h,m.a)[0]),ag=pois(lam(m.h,m.a)[1]);await col('matches').doc(m.id).update({done:true,hg,ag,ev:genEv(m.h,m.a,hg,ag)});
+ }
+}
+
+function claimCard(){
+ const free=PRE.filter(p=>!clubs.some(c=>c.preset===p.id)&&players.some(x=>x.club===p.id));
+ if(!free.length)return players.some(p=>/^pre\d+_/.test(p.id))?'':'<div class="card mu"><div class="spin"></div>Готовим клубы, это займёт несколько секунд…</div>';
+ return `<div class="card"><h3>Выберите клуб</h3><div class="mu" style="margin:-4px 0 12px">Бюджет 150 млн €. Выбранный клуб сразу станет вашим, другой игрок его взять уже не сможет.</div><div class="tiles">${free.map(p=>`<button class="tile" onclick="pickClub('${p.id}')">${crestHtml({id:p.id,name:p.name},'lg')}<b>${esc(p.name)}</b><span>Сила ${strength(p.id).toFixed(1)}</span></button>`).join('')}</div></div>`;
+}
+async function pickClub(id){const p=PRE.find(x=>x.id===id);if(p&&await dlg('Взять клуб «'+p.name+'»?',{cancel:1}))claim(id)}
+async function claim(id){
+ const p=PRE.find(x=>x.id===id);if(!p||myClub())return;
+ if(clubs.some(c=>c.preset===id))return alert('Этот клуб уже занят другим игроком');
+ const r=await reserve('claims',id,{owner:me});
+ if(r!==true)return alert(r==='taken'?'Этот клуб уже занят другим игроком':'Нет связи с базой, попробуйте ещё раз');
+ try{
+  await col('clubs').doc(me).set({name:p.name,logo:'',budget:150,owner:me,preset:id,...(authUser?{uid:authUser.id}:{})});
+  for(const x of players.filter(x=>x.club===id))await col('players').doc(x.id).update({club:me,listed:false});
+ }catch(e){try{await col('claims').doc(id).delete()}catch(x){}alert('Не удалось взять клуб. '+(e.message||''))}
+}
+async function dedupe(){
+ const g={};players.forEach(p=>{const k=String(p.name).toLowerCase();(g[k]=g[k]||[]).push(p)});
+ for(const k in g){const a=g[k];if(a.length<2)continue;
+  a.sort((x,y)=>(/^pre/.test(y.id)-/^pre/.test(x.id))||((!!y.club)-(!!x.club)));
+  for(const x of a.slice(1))await col('players').doc(x.id).delete()}
+}
+async function seed(){
+ const jobs=[];
+ for(const c of PRE)for(let i=0;i<c.pl.length;i++){const id=c.id+'_'+i;if(players.some(p=>p.id===id))continue;
+  const[n,pos,r,v]=c.pl[i];jobs.push(()=>col('players').doc(id).set({name:n,pos:pos,rating:+r,value:+v,club:((clubs.find(x=>x.preset===c.id)||{}).id)||c.id,listed:false,price:0,age:ageOf(n)}))}
+ for(let i=0;i<jobs.length;i+=10)await Promise.all(jobs.slice(i,i+10).map(f=>f()));
+}
+function vDeals0(){
+ const L=offers.filter(o=>o.buyer===me||o.seller===me).sort((a,b)=>(b.status==='open')-(a.status==='open')||b.id.localeCompare(a.id)).slice(0,30);
+ if(!L.length)return '<div class="card mu">Сделок пока нет. Откройте «Рынок» и сделайте предложение клубу.</div>';
+ return '<div class="card">'+L.map(o=>{const p=players.find(x=>x.id===o.pid)||{name:'?'};const mine=myTurn(o);
+  return `<div class="row"><div class="g"><b>${esc(p.name)}</b><div class="mu">${esc(cname(o.buyer))} покупает у ${esc(cname(o.seller))} · ${M(o.amount)}<br>${o.status==='open'?(mine?'Ваш ход':'Ждём ответа'):esc(o.note||o.status)}</div></div>${mine?`<button class="btn pr" onclick="respond('${o.id}','yes')">Принять</button><button class="btn" onclick="respond('${o.id}','cnt')">Контр</button><button class="btn" onclick="respond('${o.id}','no')">✕</button>`:''}</div>`}).join('')+'</div>';
+}
+const num=t=>parseFloat(String(t==null?'':t).replace(',','.'));
+async function offer(pid){
+ if(!winOpen())return alert('Трансферное окно закрыто. Его открывает администратор.');
+ const p=players.find(x=>x.id===pid),c=myClub();if(!p||!c)return alert('Сначала создайте клуб');
+ if(isAI(p.club))return alert('У этого клуба нет владельца, поэтому купить его игроков нельзя. Доступны игроки клубов с владельцем и свободные агенты.');
+ if(offers.some(o=>o.pid===pid&&o.buyer===me&&o.status==='open'))return alert('Предложение уже отправлено, см. «Сделки»');
+ const v=num(await dlg('Ваше предложение клубу «'+cname(p.club)+'», млн €',{input:p.value,cancel:1}));
+ if(!(v>0))return;if(v>c.budget)return alert('Не хватает бюджета');
+ const id='o'+Date.now(),o={pid,buyer:me,seller:p.club,amount:v,turn:'seller',status:'open',note:''};
+ try{await col('offers').doc(id).set(o);tab='deals';render()}catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+async function ai(id,o){
+ const p=players.find(x=>x.id===o.pid),v=p.value,d=col('offers').doc(id);
+ if(o.amount>=v*1.1)return finish(id,o);
+ if(o.amount>=v*.8)return d.update({amount:Math.round(v*1.15*10)/10,turn:'buyer',note:'Клуб назвал свою цену'});
+ return d.update({status:'rejected',note:'Клуб отклонил: слишком низкая цена'});
+}
+async function respond(id,act){
+ const o=offers.find(x=>x.id===id);if(!o)return;const d=col('offers').doc(id);
+ if(isAI(o.seller)){try{await d.update({status:'rejected',note:'У клуба нет владельца'})}catch(e){}return alert('У клуба нет владельца, сделка невозможна')}
+ try{
+  if(act==='yes')return await finish(id,o);
+  if(act==='no')return await d.update({status:'rejected',note:'Предложение отклонено'});
+  const v=num(await dlg('Ваша цена, млн €',{input:o.amount,cancel:1}));if(!(v>0))return;
+  const n={amount:v,turn:o.turn==='seller'?'buyer':'seller'};
+  await d.update(n);
+  if(isAI(o.seller)&&n.turn==='seller')await ai(id,{...o,...n});
+ }catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+async function finish(id,o){
+ if(!winOpen())return alert('Трансферное окно закрыто. Его открывает администратор.');
+ const d=col('offers').doc(id),p=players.find(x=>x.id===o.pid),b=clubs.find(x=>x.id===o.buyer),s=clubs.find(x=>x.id===o.seller);
+ if(isAI(o.seller))return d.update({status:'rejected',note:'У клуба нет владельца'});
+ if(!p||!b||p.club!==o.seller)return d.update({status:'rejected',note:'Игрок уже недоступен'});
+ if(b.budget<o.amount)return d.update({status:'rejected',note:'У покупателя не хватает бюджета'});
+ await col('players').doc(p.id).update({club:o.buyer,listed:false});
+ await col('clubs').doc(b.id).update({budget:+(b.budget-o.amount).toFixed(2)});
+ if(s)await col('clubs').doc(s.id).update({budget:+(s.budget+o.amount).toFixed(2)});
+ await d.update({status:'done',note:'Трансфер завершён'});
+ for(const x of offers.filter(x=>x.pid===o.pid&&x.id!==id&&x.status==='open'))await col('offers').doc(x.id).update({status:'rejected',note:'Игрок продан'});
+}
+async function leaveClub(){
+ const c=myClub();if(!c||!await dlg('Сменить клуб? Ваши игроки вернутся в исходный клуб (или станут свободными агентами), открытые сделки отменятся. Если сезон уже начат, администратору лучше начать его заново.',{cancel:1}))return;
+ try{
+  for(const x of players.filter(x=>x.club===me))await col('players').doc(x.id).update({club:c.preset&&x.id.startsWith(c.preset+'_')?c.preset:'',listed:false});
+  for(const o of offers.filter(o=>o.status==='open'&&(o.buyer===me||o.seller===me)))await col('offers').doc(o.id).update({status:'rejected',note:'Клуб расформирован'});
+  if(c.preset)await col('claims').doc(c.preset).delete();if(c.nk)await col('names').doc(c.nk).delete();
+  await col('clubs').doc(me).delete();tab='club';render();
+ }catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+function dlg(msg,o){o=o||{};return new Promise(res=>{
+ const w=document.createElement('div');
+ w.className='ov';
+ w.innerHTML='<div class="sheet"><p></p>'+(o.input!==undefined?'<input>':'')+'<div style="display:flex;gap:8px;justify-content:flex-end">'+(o.cancel?'<button class="btn" id="dc">Отмена</button>':'')+'<button class="btn pr" id="dk">OK</button></div></div>';
+ w.querySelector('p').textContent=msg;
+ const i=w.querySelector('input');if(i)i.value=o.input;
+ const done=v=>{w.remove();res(v)};
+ w.querySelector('#dk').onclick=()=>done(i?i.value:true);
+ const c=w.querySelector('#dc');if(c)c.onclick=()=>done(i?null:false);
+ document.body.appendChild(w);if(i)i.focus();
+})}
+window.alert=m=>{dlg(String(m))};
+let liveTimer=null,liveRun=0,lastT=-1;
+const nextT=()=>{let i;do{i=Math.floor(Math.random()*T.length)}while(i===lastT);return lastT=i};
+function vTV(){
+ const L=live;
+ if(!L||!L.ms)return '<div class="tv"><div class="tvh"><span class="live off">ТВ</span></div><p class="mu">Эфира пока нет. Администратор запускает тур во вкладке «Админ».</p></div>';
+ return `<div class="tv"><div class="tvh"><span class="live ${L.status==='on'?'':'off'}">${L.status==='on'?'● LIVE':L.status==='stopped'?'ПРЕРВАНО':'ЗАВЕРШЕНО'}</span><b>${typeof L.round==='number'?'Тур '+L.round:L.round}</b><span class="min">${L.minute}'</span></div>${L.ms.map(m=>`<div class="sc">${clogo(m.h)}<span>${esc(cname(m.h))}</span><b>${m.hg} : ${m.ag}${m.pen?'<small style="display:block;font-size:11px;font-weight:600">пен. '+m.pen[0]+':'+m.pen[1]+'</small>':''}</b><span>${esc(cname(m.a))}</span>${clogo(m.a)}</div>`).join('')}<div class="feed">${[...L.feed].reverse().map(f=>`<div class="fl${f.g?' gl':''}"><i>${f.m}'</i><div>${f.n?`<span class="mu">${esc(f.n)}</span><br>`:''}${esc(f.t)}</div></div>`).join('')}</div></div>`;
+}
+const T=[
+ (p,c)=>`${p} делает навес в штрафную площадь`,
+ (p,c)=>`${p} бьёт с дальней дистанции, мяч уходит выше ворот`,
+ (p,c,k)=>`${k} вытаскивает мяч после удара ${p}!`,
+ (p,c)=>`Угловой в пользу ${c}`,
+ (p,c)=>`${p} обводит защитника и выходит на ударную позицию`,
+ (p,c)=>`Жёлтая карточка ${p} за грубую игру`,
+ (p,c)=>`${p} отдаёт острый пас в штрафную, защита выбивает мяч`,
+ (p,c)=>`Штанга! ${p} попадает в стойку ворот`,
+ (p,c)=>`${c} спокойно разыгрывает мяч в центре поля`,
+ (p,c)=>`${p} теряет мяч, соперник готовит контратаку`,
+ (p,c)=>`Фол в центре поля, ${p} остаётся лежать`,
+ (p,c)=>`${p} исполняет штрафной, мяч попадает в стенку`,
+ (p,c)=>`${p} идёт в отбор и забирает мяч у соперника`,
+ (p,c)=>`Опасный прострел от ${p}, но партнёры не успевают`
+];
+let LU=null;
+const pickP=(c,att,pos)=>{let a=(LU&&LU[c])||players.filter(p=>p.club===c);
+ if(pos)a=a.filter(p=>p.pos===pos);else if(att)a=a.filter(p=>p.pos==='FWD'||p.pos==='MID');
+ if(!a.length)return pos?'Вратарь':'игрок';return ruName(a[Math.floor(Math.random()*a.length)].name)};
+async function goLive(mid,endMin,cup){
+ if(liveTimer)return alert('Эфир уже идёт. Не закрывайте эту страницу, пока он не закончится.');
+ const coll=cup?'cupm':'matches',src=cup?cupm:matches;
+ const open=src.filter(m=>!m.done&&(m.a||!cup)).sort((a,b)=>(a.round||a.r)-(b.round||b.r)||a.id.localeCompare(b.id));
+ const mm=(mid&&src.find(m=>m.id===mid))||open[0];
+ if(!mm)return alert('Сезон завершён или не начат');
+ const r=cup?'Лига чемпионов, '+mm.label:mm.round,ms=[mm];
+ let end=Math.min(150,parseInt(endMin||(cup?90:await dlg('До какой минуты играем? (90 или 120)',{input:90,cancel:1}))));
+ if(!(end>=30))return;
+ const plan=ms.map(m=>{const d=strength(m.h)-strength(m.a),ev=[];
+  const hg=pois(lam(m.h,m.a)[0]),ag=pois(lam(m.h,m.a)[1]);
+  for(let i=0;i<hg+ag;i++)ev.push({m:1+Math.floor(Math.random()*(end-1)),s:i<hg?0:1});
+  ev.sort((a,b)=>a.m-b.m);return{id:m.id,h:m.h,a:m.a,ev,sc:[0,0],log:[],n:cname(m.h)+' — '+cname(m.a)}});
+ LU={};plan.forEach(p=>{LU[p.h]=xiOf(p.h);LU[p.a]=xiOf(p.a)});let min=0;const feed=[{m:0,n:'',t:'Стартовый свисток! '+(cup?r:'Тур '+r)+' в прямом эфире',g:0}];
+ const save=async st=>{try{await col('live').doc('now').set({status:st,ts:Date.now(),round:r,minute:min,end,feed:feed.slice(-80),ms:plan.map(p=>({id:p.id,h:p.h,a:p.a,hg:p.sc[0],ag:p.sc[1],pen:p.ps||null}))})}catch(e){}};
+ plan.forEach(p=>[p.h,p.a].forEach(c=>feed.push({m:0,n:p.n,t:'📋 Состав '+cname(c)+' ('+fmOf(c)+', '+({a:'атака',b:'баланс',d:'оборона'}[styKey(c)])+'): '+LU[c].map(x=>ruName(x.name)).join(', '),g:0})));
+ const my=++liveRun;liveTimer=1;await save('on');tab='tv';render();
+ const saveResult=async p=>{
+  const w=p.sc[0]>p.sc[1]?p.h:p.sc[1]>p.sc[0]?p.a:(p.pk?(p.pk.sc[0]>p.pk.sc[1]?p.h:p.a):'');
+  try{await col(coll).doc(p.id).update(cup?{done:true,hg:p.sc[0],ag:p.sc[1],pen:p.pk?p.pk.sc:null,w,ev:p.log||[]}:{done:true,hg:p.sc[0],ag:p.sc[1],ev:p.log||[]})}catch(e){}
+  if(cup){try{await cupAdvance({id:p.id,w})}catch(e){}}
+ };
+ const tick=async()=>{
+  if(my!==liveRun)return;const prev=min;min=Math.min(end,min+3);
+  if(cup&&plan[0].pk){
+   const p=plan[0],k=p.pk.ks[p.ki++],c=k.s?p.a:p.h;
+   if(k.ok)p.ps[k.s]++;
+   feed.push({m:120,n:p.n,t:`🥅 ${pickP(c,1)} (${cname(c)}) ${k.ok?'забивает пенальти!':'не забивает!'} Серия ${p.ps[0]}:${p.ps[1]}`,g:k.ok?1:0});
+   const done=p.ki>=p.pk.ks.length;
+   if(done){feed.push({m:120,n:'',t:'Победа по пенальти: '+cname(p.pk.sc[0]>p.pk.sc[1]?p.h:p.a)+'!',g:1});await saveResult(p)}
+   await save(done?'done':'on');
+   if(my!==liveRun)return;if(done)LU=null;liveTimer=done?null:setTimeout(tick,6000);return;
+  }
+  if(prev<45&&min>=45)feed.push({m:45,n:'',t:'Перерыв. Команды уходят в раздевалки',g:0});
+  for(const p of plan){
+   if(p.s===undefined)p.s=0;
+   if(min>=60+15*p.s&&p.s<2){p.s++;for(const c of [p.h,p.a]){
+    const bn=players.filter(x=>x.club===c&&!LU[c].some(y=>y.id===x.id)),outs=LU[c].filter(x=>x.pos!=='GK');
+    if(bn.length&&outs.length){const i=bn[Math.floor(Math.random()*bn.length)],o=outs[Math.floor(Math.random()*outs.length)];
+     LU[c]=LU[c].map(x=>x.id===o.id?i:x);feed.push({m:min,n:p.n,t:`🔄 Замена в ${cname(c)}: ${ruName(i.name)} вместо ${ruName(o.name)}`,g:0})}}}
+   const goals=p.ev.filter(e=>e.m<=min&&!e.done);
+   if(goals.length){for(const e of goals){e.done=1;p.sc[e.s]++;const c=e.s?p.a:p.h;
+    const gs=pickScorer(c);p.log.push({s:e.s,p:gs.p.id,pn:gs.p.name,a:gs.a?gs.a.id:'',an:gs.a?gs.a.name:'',m:e.m});feed.push({m:e.m,n:p.n,t:goalText(gs,c,p.sc),g:1})}continue}
+   const d=strength(p.h)-strength(p.a),c=Math.random()<.5+d/60?p.h:p.a,o=c===p.h?p.a:p.h;
+   feed.push({m:min,n:p.n,t:commentary(c,o,min,p.sc,p.h===c),g:0});
+  }
+  if(my!==liveRun)return;
+  let fin=min>=end;const p0=plan[0];
+  if(fin&&cup&&p0.sc[0]===p0.sc[1]){
+   if(end<120){end=120;fin=false;const d=strength(p0.h)-strength(p0.a),hg=pois(.45*Math.exp(d/25)),ag=pois(.4*Math.exp(-d/25));
+    p0.ev=[];for(let i=0;i<hg+ag;i++)p0.ev.push({m:91+Math.floor(Math.random()*29),s:i<hg?0:1});p0.ev.sort((a,b)=>a.m-b.m);
+    feed.push({m:90,n:p0.n,t:'⏱ Ничья! Назначено дополнительное время',g:0})}
+   else{p0.pk=pens(p0.h,p0.a);p0.ki=0;p0.ps=[0,0];fin=false;feed.push({m:120,n:p0.n,t:'🥅 Серия пенальти! После 120 минут '+p0.sc[0]+':'+p0.sc[1],g:0})}
+  }
+  if(fin){feed.push({m:end,n:'',t:'Финальный свисток!'+(cup?'':' Матчи тура завершены'),g:0});
+   for(const p of plan)await saveResult(p)}
+  await save(fin?'done':'on');
+  if(my!==liveRun)return;if(fin)LU=null;liveTimer=fin?null:setTimeout(tick,6000);
+ };
+ liveTimer=setTimeout(tick,4000);
+}
+let sel=null;
+function lineupCard(sq){
+ const lu=lineup(me),fm=fmOf(me),ids=new Set(lu.filter(r=>r.p).map(r=>r.p.id)),bench=sq.filter(p=>!ids.has(p.id)).sort((a,b)=>b.rating-a.rating);
+ const sl=lu.map((r,i)=>{const p=r.p,on=sel&&sel.t==='s'&&sel.i===i;
+  return `<div class="sl${on?' sel':''}${p&&p.pos!==r.s.pos?' bad':''}${p?'':' em'}" style="left:${r.s.x}%;top:${r.s.y}%" onclick="onTap({t:'s',i:${i}})"><span class="rt r${p?(p.rating>=90?9:p.rating>=85?8:p.rating>=80?7:6):6}">${p?p.rating:'+'}</span><small>${p?esc(p.name.split(' ').slice(-1)[0]):r.s.pos}</small></div>`}).join('');
+ const bad=lu.filter(r=>r.p&&r.p.pos!==r.s.pos).length,gk=lu.some(r=>r.p&&r.p.pos==='GK');
+ return `<div class="card"><b>Тактика и стартовый состав</b><div class="fms">${Object.keys(FM).map(f=>`<button class="btn${f===fm?' pr':''}" onclick="setFm('${f}')">${f}</button>`).join('')}</div><div class="fms" style="padding-top:0">${[['a','Атака'],['b','Баланс'],['d','Оборона']].map(([k,n])=>`<button class="btn${styKey(me)===k?' pr':''}" onclick="setSty('${k}')">${n}</button>`).join('')}</div><div class="mu" style="margin-top:6px">${STYD[styKey(me)]} Нажмите на игрока на поле, затем на запасного или другого игрока, чтобы поменять их. ${gk?'':'⚠️ В старте нет вратаря. '}${bad?'Красная рамка: игрок не на своей позиции, команда слабее.':''}</div><div class="pitch"><div class="ml"></div><div class="cc"></div><div class="pb t"></div><div class="pb b"></div>${sl}</div></div><div class="card"><b>Замены (${bench.length})</b>${bench.map(p=>`<div onclick="onTap({t:'b',id:'${p.id}'})" style="${sel&&sel.t==='b'&&sel.id===p.id?'outline:2px solid var(--ac);border-radius:10px;':''}">${row(p)}</div>`).join('')||'<div class="mu">Запасных пока нет. Купите игроков на рынке, и они появятся здесь.</div>'}</div>`;
+}
+async function setFm(f){
+ sel=null;
+ try{await col('clubs').doc(me).update({fm:f,xi:[]})}catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+async function onTap(x){
+ if(!myClub())return;
+ if(!sel||(sel.t===x.t&&sel.i===x.i&&sel.id===x.id)){sel=sel?null:x;render();return}
+ const lu=lineup(me),n=lu.map(r=>r.p?r.p.id:''),fm=lu.fm;
+ if(sel.t==='s'&&x.t==='s'){[n[sel.i],n[x.i]]=[n[x.i],n[sel.i]]}
+ else if(sel.t==='s'&&x.t==='b')n[sel.i]=x.id;
+ else if(sel.t==='b'&&x.t==='s')n[x.i]=sel.id;
+ else{sel=x;render();return}
+ sel=null;render();
+ try{await col('clubs').doc(me).update({fm,xi:n})}catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+function adminLive(){
+ const on=live&&live.status==='on',open=matches.filter(m=>!m.done);
+ const r0=open.length?Math.min(...open.map(m=>m.round)):Math.max(0,...matches.map(m=>m.round));
+ const list=matches.filter(m=>m.round>=r0-1&&m.round<=r0).sort((a,b)=>a.round-b.round||a.id.localeCompare(b.id));
+ return `<div class="card"><b>Трансляция матчей</b>${on?`<div class="mu" style="margin-bottom:8px">Сейчас в эфире: ${typeof live.round==='number'?'тур '+live.round:live.round}, ${live.minute}'</div><button class="btn pr" style="margin-bottom:6px" onclick="stopLive()">⏹ Остановить эфир</button>`:'<div class="mu" style="margin-bottom:8px">Матчи идут по одному. Пока идёт эфир, держите эту страницу открытой.</div>'+(live&&live.ms?'<button class="btn" style="margin-bottom:6px" onclick="clearLive()">🧹 Очистить комментарии</button>':'')}${list.map(m=>`<div class="row" style="flex-wrap:wrap">${clogo(m.h)}<div class="g"><b>${esc(cname(m.h))} — ${esc(cname(m.a))}</b><div class="mu">Тур ${m.round} · ${m.done?'сыграно '+m.hg+':'+m.ag:'не сыграно'}</div></div><div style="display:flex;gap:6px">${m.done?`<button class="btn" onclick="goLive('${m.id}')">↻ Переиграть</button><button class="btn" onclick="resetMatch('${m.id}')">Сбросить</button>`:`<button class="btn pr" onclick="goLive('${m.id}')">▶ В эфир</button>`}</div></div>`).join('')||'<div class="mu">Сезон не начат.</div>'}</div>`;
+}
+async function clearLive(){
+ if(liveTimer)return alert('Сначала остановите эфир');
+ try{await col('live').doc('now').delete()}catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+async function stopLive(){
+ liveRun++;clearTimeout(liveTimer);liveTimer=null;LU=null;
+ try{await col('live').doc('now').update({status:'stopped'})}catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+async function resetMatch(id){
+ try{await col('matches').doc(id).update({done:false,hg:0,ag:0})}catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+let schedVal='',schedEnd=90,schedGap=0;
+const fmtD=(t,o)=>new Date(t).toLocaleString('ru-RU',o||{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+function schedBanner(){
+ if(!sched||!sched.at)return '';
+ return `<div class="card" style="display:flex;gap:10px;align-items:center"><span style="font-size:22px">📅</span><div style="flex:1"><b>Следующий эфир: ${fmtD(sched.at)}</b><div class="mu" id="cd" data-at="${sched.at}"></div></div></div>`;
+}
+function adminSched(){
+ return `<div class="card"><b>Расписание эфиров</b><div class="mu" style="margin-bottom:6px">Выберите время, и матч сам пойдёт в эфир. В этот момент страница администратора должна быть открыта.</div><div class="mu">Начало</div><input type="datetime-local" value="${schedVal}" oninput="schedVal=this.value"><div class="mu">До какой минуты играем (90 или 120)</div><input type="number" value="${schedEnd}" oninput="schedEnd=+this.value"><div class="mu">Пауза между матчами тура, мин (0 — только один матч)</div><input type="number" value="${schedGap}" oninput="schedGap=+this.value"><button class="btn pr" onclick="setSched()">Назначить эфир</button>${sched&&sched.at?` <button class="btn" onclick="cancelSched()">Отменить (${fmtD(sched.at,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})})</button>`:''}<div style="margin-top:12px"><button class="btn" onclick="try{localStorage.removeItem('lg_admin')}catch(e){};location.reload()">Выйти из админки</button></div></div>`;
+}
+async function setSched(){
+ const at=new Date(schedVal).getTime();
+ if(!schedVal||!(at>Date.now()))return alert('Выберите время в будущем');
+ try{await col('live').doc('sched').set({at,end:Math.min(150,Math.max(30,schedEnd||90)),gap:Math.max(0,schedGap||0)})}catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+async function cancelSched(){try{await col('live').doc('sched').delete()}catch(e){alert('Ошибка: '+(e.message||e.code))}}
+setInterval(()=>{
+ const e=document.getElementById('cd');if(!e)return;
+ let t=Math.floor((+e.dataset.at-Date.now())/1000);
+ if(t<=0)return e.textContent='Скоро начнётся…';
+ const h=Math.floor(t/3600),m=Math.floor(t%3600/60);
+ e.textContent='Начало через '+(h?h+' ч ':'')+m+' мин '+t%60+' с';
+},1000);
+setInterval(async()=>{
+ if(!owner||!db||!sched||!sched.at||liveTimer||Date.now()<sched.at)return;
+ if(live&&live.status==='on'&&Date.now()-(live.ts||0)<30000)return;
+ const s=sched;sched=null;
+ try{
+  const open=matches.filter(m=>!m.done).sort((a,b)=>a.round-b.round||a.id.localeCompare(b.id));
+  if(!open.length)return await col('live').doc('sched').delete();
+  const m=open[0],left=open.filter(x=>x.round===m.round).length;
+  if(s.gap>0&&left>1)await col('live').doc('sched').update({at:Date.now()+(Math.ceil(s.end/3)*6+10+s.gap*60)*1000});
+  else await col('live').doc('sched').delete();
+  goLive(m.id,s.end);
+ }catch(e){}
+},5000);
+async function reserve(coll,id,data){
+ const d=col(coll).doc(id);if(!d.create)return true;
+ try{await d.create(data);return true}catch(e){return e&&e.code==='23505'?'taken':'err'}
+}
+const OFFICIAL='real madrid|реал мадрид|barcelona|барселона|barca|барса|man city|manchester city|манчестер сити|man united|manchester united|манчестер юнайтед|liverpool|ливерпуль|arsenal|арсенал|chelsea|челси|tottenham|тоттенхэм|bayern|bayern munchen|бавария|borussia dortmund|dortmund|боруссия дортмунд|psg|paris saint germain|псж|juventus|ювентус|ac milan|milan|милан|inter milan|inter|интер|napoli|наполи|atletico madrid|атлетико мадрид|spartak|спартак|zenit|зенит|cska|цска|lokomotiv|локомотив|dynamo|динамо|ajax|аякс|benfica|бенфика|porto|порту|sevilla|севилья|celtic|rangers|roma|lazio|лацио|newcastle|ньюкасл|aston villa|west ham|everton|leicester|leverkusen|байер|rb leipzig|marseille|lyon|monaco|galatasaray|fenerbahce|besiktas|al nassr|al hilal|inter miami|shakhtar|шахтер|krasnodar|краснодар|rubin|рубин'.split('|');
+const LOOK={а:'a',е:'e',о:'o',р:'p',с:'c',у:'y',х:'x',к:'k',м:'m',т:'t',н:'h',в:'b'};
+const STOPW=new Set(['fc','fk','cf','sc','afc','ac','as','sk','club','фк','фс','клуб']);
+function nameKey(s,digits){
+ const t=String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/@/g,'a').replace(/\$/g,'s').replace(/[^a-z0-9а-я\s]/g,' ');
+ return t.split(/\s+/).filter(w=>w&&!STOPW.has(w)&&(digits||!/^\d+$/.test(w))).join('').replace(/0/g,'o').replace(/3/g,'e').replace(/4/g,'a').replace(/[а-я]/g,c=>LOOK[c]||c);
+}
+const lev=(a,b)=>{if(Math.abs(a.length-b.length)>1)return 9;const d=[];for(let i=0;i<=a.length;i++)d[i]=[i];for(let j=1;j<=b.length;j++)d[0][j]=j;
+ for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length]};
+function checkName(nm){
+ const k=nameKey(nm,0);if(k.length<3)return 'Название слишком короткое';
+ const bad=[...new Set(OFFICIAL.concat(PRE.map(p=>p.name)).map(x=>nameKey(x,0)))];
+ for(const b of bad)if(k===b||(b.length>=7&&(k.includes(b)||lev(k,b)<=1)))return 'Это название официального клуба. Придумайте своё или выберите готовый клуб.';
+ const kk=nameKey(nm,1);
+ if(clubs.some(c=>c.id!==me&&nameKey(c.name,1)===kk))return 'Клуб с таким названием уже есть';
+ return '';
+}
+/*CUP*/
+const rname=n=>n===2?'Финал':n===4?'Полуфинал':n===8?'1/4 финала':n===16?'1/8 финала':'1/'+(n/2)+' финала';
+function pens(h,a){
+ const d=(strength(h)-strength(a))/200,pr=[.76+d,.76-d],ks=[],sc=[0,0],tk=[0,0];
+ for(let i=0;i<30;i++){
+  for(const s of [0,1]){
+   const ok=Math.random()<pr[s];ks.push({s,ok});tk[s]++;if(ok)sc[s]++;
+   if(i<5){const rh=5-tk[0],ra=5-tk[1];if(sc[0]>sc[1]+ra||sc[1]>sc[0]+rh)return{ks,sc}}
+  }
+  if(i>=4&&sc[0]!==sc[1])return{ks,sc};
+ }
+ return{ks,sc:[1,0]};
+}
+async function cupAdvance(upd){
+ const L=cupm.map(m=>upd&&m.id===upd.id?{...m,done:true,w:upd.w}:m);
+ if(!L.length)return;
+ const mr=Math.max(...L.map(m=>m.r)),cur=L.filter(m=>m.r===mr).sort((a,b)=>a.i-b.i);
+ if(!cur.every(m=>m.done)||cur.length===1)return;
+ const win=cur.map(m=>m.w);
+ for(let i=0;i<win.length;i+=2)await col('cupm').doc('c'+(mr+1)+'_'+(i/2)).set({r:mr+1,i:i/2,h:win[i],a:win[i+1],done:false,hg:0,ag:0,pen:null,w:'',label:rname(cur.length)});
+}
+async function startCup(){
+ const ids=uclTeams();if(ids.length<2)return alert('Нужно минимум 2 клуба');
+ const _o=matches.filter(m=>!m.done),warn=!matches.length?'Чемпионат не начат, 16 клубов выберутся по силе состава. ':_o.length?'Чемпионат не завершён (осталось матчей: '+_o.length+'), 16 клубов выберутся по текущей таблице. ':'';
+ if(!await dlg(warn+'Начать Лигу чемпионов? В неё выйдут 16 лучших клубов чемпионата, жеребьёвка случайная. Старая сетка удалится.',{cancel:1}))return;
+ try{
+  for(const m of cupm)await col('cupm').doc(m.id).delete();
+  for(let i=ids.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]]}
+  let size=2;while(size<ids.length)size*=2;
+  const byes=size-ids.length,pairs=ids.slice(0,byes).map(t=>[t,'']),rest=ids.slice(byes);
+  for(let i=0;i<rest.length;i+=2)pairs.push([rest[i],rest[i+1]]);
+  for(let i=0;i<pairs.length;i++){const[h,a]=pairs[i];
+   await col('cupm').doc('c1_'+i).set({r:1,i,h,a,done:!a,hg:0,ag:0,pen:null,w:a?'':h,label:rname(size)})}
+  mTab='cup';
+ }catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+async function resetCup(){
+ if(!await dlg('Удалить сетку Лиги чемпионов?',{cancel:1}))return;
+ try{for(const m of cupm)await col('cupm').doc(m.id).delete()}catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+async function playCupNow(id){
+ const m=cupm.find(x=>x.id===id);if(!m||m.done)return;
+ const d=strength(m.h)-strength(m.a);let hg=pois(lam(m.h,m.a)[0]),ag=pois(lam(m.h,m.a)[1]),pen=null;
+ if(hg===ag){hg+=pois(.45*Math.exp(d/25));ag+=pois(.4*Math.exp(-d/25));if(hg===ag)pen=pens(m.h,m.a).sc}
+ const w=hg>ag?m.h:ag>hg?m.a:(pen[0]>pen[1]?m.h:m.a);
+ try{await col('cupm').doc(id).update({done:true,hg,ag,pen,w,ev:genEv(m.h,m.a,hg,ag)});await cupAdvance({id,w})}catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
+function cupRow(m){
+ const sc=!m.a?'Автопроход':(m.done?m.hg+' : '+m.ag+(m.pen?` (пен. ${m.pen[0]}:${m.pen[1]})`:''):'– : –');
+ return `<div class="row">${clogo(m.h)}<div class="g">${esc(cname(m.h))}</div><b>${sc}</b><div class="g" style="text-align:right">${m.a?esc(cname(m.a)):''}</div>${m.a?clogo(m.a):''}</div>`;
+}
+function vCup(){
+ if(!cupm.length)return '<div class="card mu">Лига чемпионов ещё не началась. Администратор запускает её во вкладке «Админ». В неё выходят 16 лучших клубов чемпионата.</div>';
+ const n1=cupm.filter(m=>m.r===1).length,R=Math.round(Math.log2(n1))+1,mr=Math.max(...cupm.map(m=>m.r)),last=cupm.filter(m=>m.r===mr);
+ const champ=last.length===1&&last[0].done?`<div class="hero" style="text-align:center"><div style="display:flex;justify-content:center;margin-bottom:8px">${clogo(last[0].w)}</div><div class="sub">Победитель Лиги чемпионов</div><h2 style="margin:4px 0 0">${esc(cname(last[0].w))}</h2></div>`:'';
+ const feed=(r,k)=>{const f=cupm.find(x=>x.r===r-1&&x.i===k);return f&&f.done?f.w:null};
+ const tm=(m,id,g,k)=>`<div class="bt${m&&m.done&&m.a&&m.w!==id?' l':''}">${id?clogo(id):'<span class="crest ph"></span>'}<span class="n${id?'':' ph'}">${id?esc(cname(id)):(k||'Ожидается')}</span><b>${m&&m.done&&m.a?g:(m&&m.a?'–':'')}</b></div>`;
+ let cols='';
+ for(let r=1;r<=R;r++){
+  const cnt=n1/Math.pow(2,r-1);let ms='';
+  for(let i=0;i<cnt;i++){
+   const m=cupm.find(x=>x.r===r&&x.i===i);
+   if(m)ms+=`<div class="bm">${tm(m,m.h,m.hg)}${m.a?tm(m,m.a,m.ag):`<div class="bt"><span class="n ph">Автопроход</span></div>`}${m.pen?`<div class="bf">по пенальти ${m.pen[0]}:${m.pen[1]}</div>`:''}</div>`;
+   else ms+=`<div class="bm">${tm(null,feed(r,2*i),'','Победитель пары '+(2*i+1))}${tm(null,feed(r,2*i+1),'','Победитель пары '+(2*i+2))}</div>`;
+  }
+  cols+=`<div class="bc"><h4>${rname(cnt*2)}</h4>${ms}</div>`;
+ }
+ return champ+`<div class="mu" style="margin:0 2px 8px">Сетка плей-офф. Листайте вправо, чтобы увидеть следующие раунды.</div><div class="bk">${cols}</div>`;
+}
+function vMatches(){
+ const seg=`<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn${mTab==='league'?' pr':''}" onclick="mTab='league';render()">Чемпионат</button><button class="btn${mTab==='cup'?' pr':''}" onclick="mTab='cup';render()">Лига чемпионов</button></div>`;
+ return seg+(mTab==='cup'?vCup():vMatches0());
+}
+function adminCup(){
+ const mr=cupm.length?Math.max(...cupm.map(m=>m.r)):0,cur=cupm.filter(m=>m.r===mr).sort((a,b)=>a.i-b.i);
+ return `<div class="card"><b>Лига чемпионов</b><div class="mu" style="margin-bottom:8px">В неё выходят 16 лучших клубов чемпионата по таблице (если клубов меньше 16, играют все). Жеребьёвка случайная, старт с 1/8 финала. При ничьей идёт дополнительное время до 120 минут, затем пенальти.</div><div class="mu" style="margin-bottom:8px">Чемпионат: ${matches.length?(matches.filter(m=>m.done).length+' из '+matches.length+' матчей сыграно'+(matches.every(m=>m.done)?'. Завершён, можно запускать.':'.')):'ещё не начат.'} Запускает Лигу чемпионов только администратор.</div><button class="btn pr" onclick="startCup()">Начать Лигу чемпионов</button>${cupm.length?' <button class="btn" onclick="resetCup()">Сбросить</button>':''}${cur.length?`<div class="mu" style="margin:10px 0 4px">Сейчас: ${esc(cur[0].label)}</div>`+cur.map(m=>`<div class="row" style="flex-wrap:wrap">${clogo(m.h)}<div class="g"><b>${esc(cname(m.h))} — ${m.a?esc(cname(m.a)):'автопроход'}</b><div class="mu">${m.done?'сыграно '+m.hg+':'+m.ag+(m.pen?' (пен. '+m.pen[0]+':'+m.pen[1]+')':''):'не сыграно'}</div></div>${m.done?'':`<div style="display:flex;gap:6px"><button class="btn pr" onclick="goLive('${m.id}',90,true)">▶ В эфир</button><button class="btn" onclick="playCupNow('${m.id}')">⚡ Сразу</button></div>`}</div>`).join(''):''}</div>`;
+}
+/*ENDCUP*/
+/*STATS*/
+function pickScorer(c){
+ const L=(LU&&LU[c])||xiOf(c);if(!L.length)return{p:{id:'',name:'Игрок'},a:null};
+ const wp=(x,m)=>Math.pow(+x.rating/80,4)*(m[x.pos]||1);
+ const pick=(arr,m)=>{const t=arr.reduce((s,x)=>s+wp(x,m),0);let r=Math.random()*t;for(const x of arr){r-=wp(x,m);if(r<=0)return x}return arr[arr.length-1]};
+ const p=pick(L,{FWD:3,MID:1.4,DEF:.5,GK:.02}),others=L.filter(x=>x.id!==p.id);
+ return{p,a:others.length&&Math.random()<.7?pick(others,{FWD:1.6,MID:2,DEF:.8,GK:.05}):null};
+}
+function genEv(h,a,hg,ag){
+ const ev=[];
+ for(let i=0;i<hg+ag;i++){const s=i<hg?0:1,g=pickScorer(s?a:h);ev.push({s,p:g.p.id,pn:g.p.name,a:g.a?g.a.id:'',an:g.a?g.a.name:'',m:1+Math.floor(Math.random()*90)})}
+ return ev.sort((x,y)=>x.m-y.m);
+}
+function vTable(){
+ const seg=`<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn${tTab==='table'?' pr':''}" onclick="tTab='table';render()">Таблица</button><button class="btn${tTab==='stats'?' pr':''}" onclick="tTab='stats';render()">Статистика</button><button class="btn${tTab==='hist'?' pr':''}" onclick="tTab='hist';render()">История</button></div>`;
+ return '<div class="mu" style="margin:0 2px 8px">Сезон '+seasonNo()+'</div>'+seg+(tTab==='stats'?vStats():tTab==='hist'?vHist():vTable0());
+}
+function vStats(){
+ const all=[];matches.filter(m=>m.done).forEach(m=>all.push({...m,lg:1}));cupm.filter(m=>m.done&&m.a).forEach(m=>all.push(m));
+ if(!all.length)return '<div class="card mu">Статистика появится после первых сыгранных матчей.</div>';
+ const G={},A={},CS={};
+ all.forEach(m=>{(m.ev||[]).forEach(e=>{const c=e.s?m.a:m.h;
+   if(e.p){const g=G[e.p]=G[e.p]||{n:e.pn,c,v:0};g.v++}
+   if(e.a){const a=A[e.a]=A[e.a]||{n:e.an,c,v:0};a.v++}});
+  if(m.ag===0)CS[m.h]=(CS[m.h]||0)+1;if(m.hg===0)CS[m.a]=(CS[m.a]||0)+1});
+ const top=o=>Object.values(o).sort((x,y)=>y.v-x.v).slice(0,10);
+ const list=L=>L.map((x,i)=>`<div class="row"><b style="width:22px;color:var(--mu)">${i+1}</b>${clogo(x.c)}<div class="g"><b>${esc(x.n)}</b><div class="mu">${esc(cname(x.c))}</div></div><b style="font-size:18px">${x.v}</b></div>`).join('')||'<div class="mu">Пока нет данных</div>';
+ const goals=all.reduce((s,m)=>s+m.hg+m.ag,0);
+ const lr=Math.max(0,...all.filter(m=>m.lg).map(m=>m.round));
+ const P={};all.filter(m=>m.lg&&m.round===lr).forEach(m=>(m.ev||[]).forEach(e=>{const c=e.s?m.a:m.h;
+   if(e.p){const x=P[e.p]=P[e.p]||{n:e.pn,c,v:0,g:0,a:0};x.g++;x.v+=3}
+   if(e.a){const x=P[e.a]=P[e.a]||{n:e.an,c,v:0,g:0,a:0};x.a++;x.v+=2}}));
+ const best=Object.values(P).sort((x,y)=>y.v-x.v)[0];
+ const big=all.slice().sort((x,y)=>Math.abs(y.hg-y.ag)-Math.abs(x.hg-x.ag)||(y.hg+y.ag)-(x.hg+x.ag))[0];
+ const hot=all.slice().sort((x,y)=>(y.hg+y.ag)-(x.hg+x.ag))[0];
+ const ml=m=>`${esc(cname(m.h))} ${m.hg}:${m.ag} ${esc(cname(m.a))}`;
+ const cs=Object.entries(CS).map(([id,v])=>({n:cname(id),c:id,v})).sort((x,y)=>y.v-x.v).slice(0,5);
+ return `<div class="card"><div class="chips" style="color:var(--tx)"><span style="background:var(--bg)">⚽ Матчей: ${all.length}</span><span style="background:var(--bg)">🥅 Голов: ${goals}</span><span style="background:var(--bg)">📈 В среднем: ${(goals/all.length).toFixed(2)}</span></div></div>
+ ${best?`<div class="card"><b>⭐ Игрок тура (тур ${lr})</b><div class="row">${clogo(best.c)}<div class="g"><b>${esc(best.n)}</b><div class="mu">${esc(cname(best.c))} · голов ${best.g}, передач ${best.a}</div></div></div></div>`:''}
+ <div class="card"><b>👟 Бомбардиры</b>${list(top(G))}</div>
+ <div class="card"><b>🎯 Ассистенты</b>${list(top(A))}</div>
+ <div class="card"><b>🧤 Сухие матчи</b>${list(cs)}</div>
+ <div class="card"><b>📌 Рекорды</b><div class="mu" style="margin-top:6px">Крупнейшая победа: <b style="color:var(--tx)">${ml(big)}</b></div><div class="mu">Самый результативный матч: <b style="color:var(--tx)">${ml(hot)}</b></div></div>`;
+}
+/*ENDSTATS*/
+/*AUTH*/
+function vClub(){return accountCard()+vClub0()}
+function accountCard(){
+ if(!window.SB)return '';
+ if(authUser)return `<div class="card" style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">✅</span><div style="flex:1"><b>Аккаунт подключён</b><div class="mu">${esc(authUser.email||'Google')}. Клуб сохранён и доступен с любого устройства.</div></div><button class="btn" onclick="authOut()">Выйти</button></div>`;
+ return `<div class="card"><b>🔐 Для безопасности клуба лучше войти</b><div class="mu" style="margin:4px 0 10px">Вход необязателен, можно играть и так. Но без него клуб хранится только в этом браузере: очистите данные или смените телефон, и доступ к клубу пропадёт. С аккаунтом клуб остаётся за вами навсегда и открывается с любого устройства.</div><button class="btn pr" onclick="openAuth()">Войти или создать аккаунт</button></div>`;
+}
+const authErr=e=>/Invalid login/i.test(e.message)?'Неверная почта или пароль':/already/i.test(e.message)?'Такая почта уже зарегистрирована, нажмите «Войти»':e.message;
+function openAuth(){
+ const w=document.createElement('div');
+ w.className='ov';
+ w.innerHTML=`<div class="sheet"><h3>Вход в аккаунт</h3><input id="ae" type="email" placeholder="Почта" autocomplete="email"><input id="ap" type="password" placeholder="Пароль (от 6 символов)" autocomplete="current-password"><div id="am" class="mu" style="min-height:18px;margin-bottom:8px"></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pr" id="ain">Войти</button><button class="btn" id="aup">Создать аккаунт</button>${CFG.google?'<button class="btn" id="agg">Войти через Google</button>':''}<button class="btn" id="acl">Закрыть</button></div></div>`;
+ document.body.appendChild(w);
+ const m=t=>{w.querySelector('#am').textContent=t},v=()=>[w.querySelector('#ae').value.trim(),w.querySelector('#ap').value];
+ w.querySelector('#acl').onclick=()=>w.remove();
+ w.querySelector('#ain').onclick=async()=>{const[e,p]=v();m('Входим…');const{error}=await SB.auth.signInWithPassword({email:e,password:p});if(error)m(authErr(error));else w.remove()};
+ w.querySelector('#aup').onclick=async()=>{const[e,p]=v();if(p.length<6)return m('Пароль не короче 6 символов');m('Создаём аккаунт…');
+  const{data,error}=await SB.auth.signUp({email:e,password:p});
+  if(error)m(authErr(error));else if(!data.session)m('Проверьте почту и подтвердите адрес, затем нажмите «Войти».');else w.remove()};
+ const g=w.querySelector('#agg');if(g)g.onclick=()=>SB.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href.split('#')[0]}});
+}
+async function authOut(){try{await SB.auth.signOut()}catch(e){}authUser=null;bound=false;render()}
+async function bindAccount(){
+ if(!authUser||bound||!clubsReady)return;bound=true;
+ const f=clubs.find(c=>c.uid===authUser.id);
+ if(f){if(f.id!==me){me=f.id;try{localStorage.setItem('lg_uid',me)}catch(e){}render()}return}
+ const c=myClub();
+ if(c&&!c.uid){try{await col('clubs').doc(me).update({uid:authUser.id})}catch(e){}}
+}
+async function authInit(){
+ if(!window.SB)return;
+ try{const{data}=await SB.auth.getSession();authUser=data.session?data.session.user:null;bindAccount()}catch(e){}
+ SB.auth.onAuthStateChange((ev,ses)=>{authUser=ses?ses.user:null;bound=false;bindAccount();render()});
+}
+/*ENDAUTH*/
+
+const nk=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9а-я]/g,'');
+const POSMAP={GK:'GK',CB:'DEF',LB:'DEF',RB:'DEF',LWB:'DEF',RWB:'DEF',DEF:'DEF',CDM:'MID',CM:'MID',CAM:'MID',LM:'MID',RM:'MID',MID:'MID',ST:'FWD',CF:'FWD',LW:'FWD',RW:'FWD',LF:'FWD',RF:'FWD',FWD:'FWD'};
+async function fixRatings(){
+ for(const p of players){const r=RATES[p.name];if(r&&+p.rating!==r){try{await col('players').doc(p.id).update({rating:r})}catch(e){}}}
+}
+async function syncPlayers(rows){
+ const by={};players.forEach(p=>by[nk(p.name)]=p);
+ let up=0;const add=[];
+ for(const[n,pos,r,v]of rows){const p=by[nk(n)];
+  if(p){const d={};if(r>0&&r!==+p.rating)d.rating=r;if(v>0&&v!==+p.value)d.value=v;
+   if(Object.keys(d).length){try{await col('players').doc(p.id).update(d);up++}catch(e){}}}
+  else add.push([n,POSMAP[String(pos).toUpperCase()]||'MID',r,v])}
+ if(add.length)await addPlayers(add);
+ alert('Обновлено игроков: '+up+', добавлено новых: '+add.length);
+}
+
+const STY={a:{a:1.3,c:1.25},b:{a:1,c:1},d:{a:.78,c:.72}};
+const STYD={a:'Атака: больше голов в обе стороны. Выгодна более сильной команде.',b:'Баланс: без перекосов.',d:'Оборона: меньше голов в обе стороны. Выгодна более слабой команде.'};
+const styKey=c=>{const cl=clubs.find(x=>x.id===c);return cl&&STY[cl.sty]?cl.sty:'b'};
+const styOf=c=>STY[styKey(c)];
+function lam(h,a){const d=strength(h)-strength(a),sh=styOf(h),sa=styOf(a);return[1.5*Math.exp((d+3)/20)*sh.a*sa.c*fmF(h).a*fmF(a).c,1.2*Math.exp(-d/20)*sa.a*sh.c*fmF(a).a*fmF(h).c]}
+async function setSty(k){try{await col('clubs').doc(me).update({sty:k})}catch(e){alert('Ошибка: '+(e.message||e.code))}}
+const winOpen=()=>!!(win&&win.open);
+function winBanner(){return winOpen()?'<div class="wb"><i></i>Трансферное окно открыто</div>':'<div class="wb off"><i></i>Трансферное окно закрыто. Покупки и принятие сделок недоступны.</div>'}
+function adminWin(){
+ const o=winOpen();
+ return `<div class="card"><b>Трансферное окно</b><div class="mu" style="margin:4px 0 10px">Сейчас: <b style="color:var(--tx)">${o?'открыто':'закрыто'}</b>. Пока окно закрыто, никто не может покупать игроков и принимать предложения. Торговаться и отказывать можно всегда.</div><button class="btn pr" onclick="setWin(${!o})">${o?'Закрыть окно':'Открыть окно'}</button></div>`;
+}
+async function setWin(v){try{await col('live').doc('win').set({open:v,ts:Date.now()})}catch(e){alert('Ошибка: '+(e.message||e.code))}}
+function vDeals(){return winBanner()+vDeals0()}
+
+function uclTeams(){
+ const ids=matches.some(m=>m.done)?standings().map(r=>r.id):allClubs().map(c=>c.id).sort((a,b)=>strength(b)-strength(a));
+ return ids.slice(0,16);
+}
+/*RU*/
+const RUF={};
+`Courtois:Куртуа|Carvajal:Карвахаль|Militão:Милитао|Rüdiger:Рюдигер|Huijsen:Хёйсен|Tchouaméni:Чуамени|Valverde:Вальверде|Bellingham:Беллингем|Güler:Гюлер|Vinícius:Винисиус|Mbappé:Мбаппе|Mendy:Менди|Camavinga:Камавинга|Rodrygo:Родриго|ter Stegen:Тер Штеген|Koundé:Кунде|Cubarsí:Кубарси|Araújo:Араухо|Balde:Бальде|Pedri:Педри|de Jong:Де Йонг|Gavi:Гави|Yamal:Ямаль|Lewandowski:Левандовский|Raphinha:Рафинья|Szczęsny:Щенсный|Olmo:Ольмо|Ferran Torres:Ферран Торрес|Donnarumma:Доннарумма|Gvardiol:Гвардиол|Rúben Dias:Диаш|Rodri:Родри|Bernardo Silva:Бернарду Силва|Foden:Фоден|Reijnders:Рейндерс|Haaland:Холанд|Cherki:Шерки|Akanji:Аканджи|Kovačić:Ковачич|Marmoush:Мармуш|Alisson:Алисон|Frimpong:Фримпонг|van Dijk:Ван Дейк|Konaté:Конате|Mac Allister:Мак Аллистер|Szoboszlai:Собослаи|Wirtz:Вирц|Salah:Салах|Isak:Исак|Gakpo:Гакпо|Gravenberch:Гравенберх|Ekitike:Экитике|Raya:Райя|Saliba:Салиба|Gabriel Magalhães:Габриэл|Calafiori:Калафиори|Rice:Райс|Ødegaard:Эдегор|Zubimendi:Субименди|Saka:Сака|Gyökeres:Гёкереш|Martinelli:Мартинелли|Timber:Тимбер|Eze:Эзе|Trossard:Троссар|Neuer:Нойер|Kimmich:Киммих|Upamecano:Упамекано|Kim Min-jae:Ким Мин Чжэ|Davies:Дэвис|Pavlović:Павлович|Goretzka:Горецка|Musiala:Мусиала|Olise:Олисе|Luis Díaz:Луис Диас|Kane:Кейн|Gnabry:Гнабри|Safonov:Сафонов|Hakimi:Хакими|Marquinhos:Маркиньос|Pacho:Пачо|Nuno Mendes:Нуну Мендеш|Vitinha:Витинья|Fabián Ruiz:Фабиан Руис|João Neves:Жуан Невеш|Dembélé:Дембеле|Doué:Дуэ|Kvaratskhelia:Хвича|Barcola:Баркола|Zabarnyi:Забарный|Bruno Fernandes:Бруну Фернандеш|Mbeumo:Мбемо|Cunha:Кунья|Šeško:Шешко|Mainoo:Мэйну|Casemiro:Каземиро|Onana:Онана|Dalot:Далот|Maguire:Магуайр|de Ligt:Де Лигт|Lisandro Martínez:Лисандро Мартинес|Tielemans:Тилеманс|Amad Diallo:Амад|Palmer:Палмер|Enzo Fernández:Энцо Фернандес|Caicedo:Кайседо|Pedro Neto:Педру Нету|João Pedro:Жуан Педру|Jackson:Джексон|Reece James:Рис Джеймс|Cucurella:Кукурелья|Estêvão:Эштевао|Maddison:Мэддисон|Xavi Simons:Хави Саймонс|Kudus:Кудус|Solanke:Соланке|Romero:Ромеро|Porro:Порро|Vicario:Викарио|Tonali:Тонали|Brennan Johnson:Джонсон|Palhinha:Палинья|van de Ven:Ван де Вен|Udogie:Удоджи|Richarlison:Ришарлисон|Lautaro Martínez:Лаутаро|Marcus Thuram:Тюрам|Khéphren Thuram:Кефрен Тюрам|Barella:Барелла|Çalhanoğlu:Чалханоглу|Bastoni:Бастони|Dimarco:Димарко|Sommer:Зоммер|Mkhitaryan:Мхитарян|Dumfries:Думфрис|Pio Esposito:Эспозито|Leão:Леау|Pulisic:Пулишич|Maignan:Майньян|Modrić:Модрич|Rabiot:Рабьо|Santiago Giménez:Сантьяго Хименес|Nkunku:Нкунку|Tomori:Томори|Yıldız:Йылдыз|Vlahović:Влахович|Jonathan David:Джонатан Дэвид|Koopmeiners:Купмейнерс|Locatelli:Локателли|Bremer:Бремер|Cambiaso:Камбьязо|Conceição:Консейсан|Griezmann:Гризманн|Julián Álvarez:Хулиан Альварес|Sørloth:Сёрлот|Llorente:Льоренте|Koke:Коке|Oblak:Облак|De Paul:Де Пауль|Gallagher:Галлахер|José María Giménez:Хосе Хименес|Guirassy:Гирасси|Adeyemi:Адейеми|Beier:Байер|Brandt:Брандт|Kobel:Кобель|Schlotterbeck:Шлоттербек|Lukaku:Лукаку|Neres:Нерес|Højlund:Хёйлунн|McTominay:Мактоминей|Lobotka:Лоботка|Di Lorenzo:Ди Лоренцо|Buongiorno:Буонджорно|Noa Lang:Ноа Ланг|Osimhen:Осимхен|Sané:Сане|Gündoğan:Гюндоган|Icardi:Икарди|Nico Williams:Нико Уильямс|Iñaki Williams:Иньяки Уильямс|Sancet:Санчет|Moleiro:Молейро|Lookman:Лукман|Dybala:Дибала|Greenwood:Гринвуд|Aubameyang:Обамеянг|Balogun:Балогун|Pavlidis:Павлидис|Di María:Ди Мария|Gordon:Гордон|Woltemade:Вольтемаде|Watkins:Уоткинс|Emiliano Martínez:Эмилиано Мартинес|Schick:Шик|Dovbyk:Довбик|Joelinton:Жоэлинтон|Kökçü:Кёкчю|Diogo Costa:Диогу Кошта|Aghehowa:Агехова|Hjulmand:Юльманн|Brobbey:Бробби|Weghorst:Вегхорст|Højbjerg:Хойбьерг|Akliouche:Аклиуш|Lukeba:Лукеба|Geertruida:Хертрёйда|Gulácsi:Гулачи|Grimaldo:Гримальдо|Pepê:Пепе|Ederson:Эдерсон|Éderson:Эдерсон|Angeliño:Анжелиньо|Vanderson:Вандерсон|Sorloth:Сёрлот|Mancini:Манчини|Carnesecchi:Карнезекки|Svilar:Свилар|Jiménez:Хименес|Ayhan:Айхан|Gaaei:Гааей|Fofana:Фофана|Vermeeren:Вермерен|Quansah:Куаса|Vinícius Júnior:Винисиус|Geertruida:Хертрёйда`.split('|').forEach(x=>{const i=x.lastIndexOf(':');RUF[nk(x.slice(0,i))]=x.slice(i+1)});
+function tr(s){
+ let t=String(s).toLowerCase().replace(/ø/g,'о').replace(/å/g,'о').replace(/æ/g,'е').replace(/ł/g,'л').replace(/đ/g,'д').replace(/ß/g,'сс').replace(/ñ/g,'нь').replace(/ı/g,'ы').replace(/ö/g,'ё').replace(/ü/g,'ю').replace(/ä/g,'э').replace(/š/g,'ш').replace(/č|ć/g,'ч').replace(/ž/g,'ж').replace(/ř/g,'рж');
+ t=t.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ [[/tsch/g,'ч'],[/sch/g,'ш'],[/sh/g,'ш'],[/ch/g,'ч'],[/zh/g,'ж'],[/kh/g,'х'],[/ph/g,'ф'],[/th/g,'т'],[/ck/g,'к'],[/ts/g,'ц'],[/tz/g,'ц'],[/qu/g,'кв'],[/ee/g,'и'],[/oo/g,'у'],[/ou/g,'у'],[/lh/g,'ль'],[/nh/g,'нь'],[/gn/g,'нь'],[/c(?=[eiy])/g,'с'],[/j(?=[ie])/g,'х'],[/ge(?=[a-z])/g,'дже'],[/gi(?=[a-z])/g,'джи']].forEach(([a,b])=>{t=t.replace(a,b)});
+ const M={a:'а',b:'б',c:'к',d:'д',e:'е',f:'ф',g:'г',h:'х',i:'и',j:'й',k:'к',l:'л',m:'м',n:'н',o:'о',p:'п',q:'к',r:'р',s:'с',t:'т',u:'у',v:'в',w:'в',x:'кс',y:'и',z:'з'};
+ t=t.replace(/[a-z]/g,c=>M[c]).replace(/[^а-яё\s-]/g,'');
+ return t.replace(/(^|[\s-])([а-яё])/g,(m,a,b)=>a+b.toUpperCase());
+}
+function ruName(n){
+ n=String(n||'').trim();if(RUF[nk(n)])return RUF[nk(n)];
+ const p=n.split(/\s+/);
+ for(const k of [3,2,1]){if(p.length>=k){const v=RUF[nk(p.slice(-k).join(' '))];if(v)return v}}
+ return tr(p[p.length-1]);
+}
+const POSRU={GK:'вратаря',DEF:'защитника',MID:'полузащитника',FWD:'нападающего'};
+const fill=(s,x)=>s.replace(/\{(\w+)\}/g,(m,k)=>x[k]!==undefined?x[k]:m);
+const GOALS=['И-и-и-и-и ГООООООЛ! {p} забивает!','ГОООООЛ! {p}! Невероятно!','ЕСТЬ ГОЛ! {p} отправляет мяч в сетку!','ГОЛ-ГОЛ-ГОЛ! {p}!','ГОООООЛ! Какой удар у {p}!','ВОТ ЭТО ГОЛ! {p} не оставляет вратарю шансов!','{p}!!! {p}!!! ГООООЛ!!!','И-и-и-и ЭТО ГОЛ! {p} бьёт точно в угол!','Трибуны взрываются! {p} забивает!'];
+function goalText(gs,c,sc){
+ const p=ruName(gs.p.name),line=fill(GOALS[Math.floor(Math.random()*GOALS.length)],{p});
+ const as=gs.a?[' Передача: ',' Ассистирует ',' Голевой пас от '][Math.floor(Math.random()*3)]+ruName(gs.a.name)+'.':' Сам решил эпизод!';
+ return '⚽ '+line+' ('+cname(c)+').'+as+' '+sc[0]+':'+sc[1];
+}
+const POOL={
+ fwd:['{p} выходит один на один с вратарём и... мимо!','{p} бьёт головой после навеса, мяч уходит выше ворот','Штанга! {p} попадает в стойку, соперник вздыхает с облегчением','{p} обыгрывает защитника и бьёт по воротам, {k} спасает','{p} вырывается в прорыв, но успевает вернуться защитник','Опасный момент! {p} получает мяч в штрафной и бьёт рядом со штангой','{p} пытается пробить на опережение, оборона {o} выбивает мяч','{p} вытягивает ногу к прострелу, но не дотягивается до мяча'],
+ mid:['{p} отдаёт острый пас в штрафную, защита выбивает мяч','{p} раздаёт точный диагональный пас на фланг','{p} бьёт с дальней дистанции, мяч уходит выше ворот','{p} забирает мяч в центре поля и начинает атаку {c}','{p} отбирает мяч у соперника и сразу идёт вперёд','Хитрая передача {p} пяткой, но партнёр не успевает','{p} диктует темп игры в центре поля','Навес {p} в штрафную, вратарь {k} забирает мяч'],
+ def:['{p} вовремя выбивает мяч из своей штрафной','{p} блокирует удар в последний момент','Мощный подкат {p}! Опасность миновала','{p} закрывает грозную атаку {o}','{p} выигрывает верховую борьбу и убирает мяч подальше','{p} прерывает проход соперника чистым подкатом','{p} подключается к атаке, но навес не находит адресата'],
+ gk:['Невероятный сейв {k}! Он вытаскивает мяч из угла','{k} в броске отбивает мяч на угловой','{k} уверенно забирает мяч после навеса','{k} выходит из ворот и перехватывает передачу','Вратарь {k} спасает команду в моменте один на один'],
+ foul:['Жёлтая карточка {p} за грубую игру','Фол {p} в центре поля, арбитр останавливает игру','{p} получает по ногам и остаётся лежать, подбегают врачи','Спорный момент: {p} просит пенальти, но арбитр не реагирует','Офсайд! {p} оказывается в положении вне игры','Арбитр делает замечание {p} за споры','{p} затягивает время при вбрасывании, судья недоволен'],
+ set:['Угловой в пользу {c}','{c} получает штрафной в опасной близости от ворот, к мячу подходит {p}','{p} подаёт угловой в центр штрафной, {k} забирает мяч','Штрафной исполняет {p}, мяч попадает в стенку','Длинный аут {p}, мяч летит в штрафную','{p} разыгрывает короткий угловой'],
+ atm:['Трибуны гудят, болельщики {c} встают с мест','Темп игры растёт, {c} прессингует по всему полю','Тактическая борьба в центре поля, ни одна команда не уступает','{c} владеет мячом и спокойно разыгрывает комбинацию','{o} отошла в оборону и ждёт ошибки соперника','Стадион подбадривает {c}']
+};
+let usedC=[];
+function commentary(c,o,min,sc,home){
+ const L=(LU&&LU[c])||xiOf(c),LO=(LU&&LU[o])||xiOf(o);
+ const rp=(arr,pos)=>{let a=arr.filter(x=>x.pos===pos);if(!a.length)a=arr;return a.length?ruName(a[Math.floor(Math.random()*a.length)].name):'игрок'};
+ const own=home?sc[0]:sc[1],opp=home?sc[1]:sc[0];
+ const ctx={c:cname(c),o:cname(o),k:rp(LO,'GK'),fm:fmOf(c),a:own,b:opp};
+ const r=Math.random(),kind=r<.22?'fwd':r<.38?'mid':r<.5?'def':r<.6?'gk':r<.7?'foul':r<.78?'set':r<.88?'atm':'sp';
+ if(kind==='sp'){
+  const o2=[];
+  if(min<=10)o2.push('Команды осторожно начинают матч, идёт борьба за центр поля');
+  if(min>=80)o2.push('Идут последние минуты, {c} бросает силы в атаку','Время на исходе, трибуны на ногах');
+  o2.push(own<opp?'{c} уступает {a}:{b} и увеличивает давление':own>opp?'{c} ведёт {a}:{b} и контролирует мяч':'Счёт {a}:{b}, обе команды ищут свой шанс');
+  const st=styKey(c);
+  o2.push(st==='a'?'Высокий прессинг {c}: игроки играют на чужой половине поля':st==='d'?'{c} глубоко отошла к своим воротам и ждёт контратаки':'{c} играет в схеме {fm}, команда держит баланс между обороной и атакой');
+  const mm=lineup(c).filter(x=>x.p&&x.p.pos!==x.s.pos);
+  if(mm.length){const x=mm[Math.floor(Math.random()*mm.length)];ctx.p=ruName(x.p.name);ctx.s=POSRU[x.s.pos];o2.push('{p} непривычно смотрится на позиции {s}: неточный пас и потеря мяча')}
+  return fill(o2[Math.floor(Math.random()*o2.length)],ctx);
+ }
+ ctx.p=rp(L,{fwd:'FWD',mid:'MID',def:'DEF',gk:'GK',foul:'MID',set:'MID',atm:'MID'}[kind]);
+ const pool=POOL[kind];let i,t=0;
+ do{i=Math.floor(Math.random()*pool.length)}while(usedC.includes(kind+i)&&++t<8);
+ usedC.push(kind+i);if(usedC.length>14)usedC.shift();
+ return fill(pool[i],ctx);
+}
+function fmF(c){const f=FM[fmOf(c)]||FM['4-3-3'],n=p=>f.filter(x=>x[0]===p).reduce((s,x)=>s+x[1],0);return{a:1+.07*(n('FWD')-3)+.03*(n('MID')-3.5),c:1-.06*(n('DEF')-4)-.02*(n('MID')-3.5)}}
+/*ENDRU*/
+
+/*SEASON*/
+const AGES={};`Thibaut Courtois:34|Dani Carvajal:34|Antonio Rüdiger:33|Dean Huijsen:21|Arda Güler:21|Ferland Mendy:31|Marc-André ter Stegen:34|Pau Cubarsí:19|Alejandro Balde:22|Gavi:22|Pedri:23|Lamine Yamal:19|Robert Lewandowski:38|Wojciech Szczęsny:36|Nathan Aké:31|Bernardo Silva:32|Rodri:30|Stefan Ortega:33|Manuel Akanji:31|Mateo Kovačić:32|Rayan Cherki:22|Nico O'Reilly:21|Alisson:33|Virgil van Dijk:35|Mohamed Salah:34|Conor Bradley:22|Milos Kerkez:22|Kepa Arrizabalaga:32|Leandro Trossard:31|Myles Lewis-Skelly:20|Manuel Neuer:40|Joshua Kimmich:31|Leon Goretzka:31|Serge Gnabry:31|Harry Kane:33|Jonas Urbig:22|Aleksandar Pavlović:22|Raphaël Guerreiro:32|Marquinhos:32|Warren Zaïre-Emery:20|Désiré Doué:21|João Neves:21|Lucas Beraldo:22|Fabián Ruiz:30|Casemiro:34|Harry Maguire:33|Bruno Fernandes:32|Kobbie Mainoo:21|Leny Yoro:20|Patrick Dorgu:21|Estêvão:19|Andrey Santos:22|Antonín Kinský:23|João Palhinha:31|James Maddison:30|Yann Sommer:37|Francesco Acerbi:38|Henrikh Mkhitaryan:37|Hakan Çalhanoğlu:32|Denzel Dumfries:30|Pio Esposito:21|Ange-Yoan Bonny:22|Luka Modrić:41|Mike Maignan:31|Adrien Rabiot:31|Pietro Terracciano:35|Ruben Loftus-Cheek:30|Álex Jiménez:20|Mattia Perin:33|Kenan Yıldız:21|Jan Oblak:33|Koke:34|Antoine Griezmann:35|Rodrigo De Paul:32|Juan Musso:32|Clément Lenglet:31|Marcos Llorente:31|Pablo Barrios:23|Giuliano Simeone:23|José María Giménez:31|Niklas Süle:31|Pascal Groß:35|Marcel Sabitzer:32|Alexander Meyer:35|Ramy Bensebaini:31|Maximilian Beier:23|Giovanni Di Lorenzo:32|Leonardo Spinazzola:33|Stanislav Lobotka:31|Romelu Lukaku:33|Juan Jesus:35|Antonio Vergara:23|Nick Pope:34|Kieran Trippier:36|Fabian Schär:34|Dan Burn:34|Lewis Miley:19|Lewis Hall:21|Emiliano Martínez:34|Lucas Digne:33|Tyrone Mings:33|John McGinn:31|Marco Bizot:35|Janis Blaswich:35|Jeanuël Belocian:20|Christian Kofane:19|Arthur Vermeeren:21|Jarrell Quansah:23|Péter Gulácsi:36|Willi Orbán:33|Assan Ouédraogo:20|Yan Diomande:19|Antonio Nusa:21|Conrad Harder:21|Max Finkgräfe:22|Paulo Dybala:33|Pierluigi Gollini:31|Bryan Cristante:31|Mario Hermoso:31|Gianluca Mancini:30|Niccolò Pisilli:21|Evan Ferguson:21|Matías Soulé:23|Wesley França:22|Rui Patrício:38|Sead Kolašinac:33|Berat Djimsiti:33|Marten de Roon:35|Mario Pašalić:31|Lorenzo Bernasconi:22|Pierre-Emerick Aubameyang:37|Pierre-Emile Højbjerg:31|Geoffrey Kondogbia:33|Benjamin Pavard:30|Lukas Hradecky:37|Takumi Minamino:31|Lamine Camara:22|Christian Mawissa:21|George Ilenikhena:20|Aleksandr Golovin:30|Ángel Di María:38|Nicolás Otamendi:38|Cláudio Ramos:35|Oskar Pietuszewski:18|Rodrigo Mora:19|Victor Froholdt:20|Geovany Quenda:19|Zeno Debast:22|Hidemasa Morita:31|Remko Pasveer:42|Jordan Henderson:36|Wout Weghorst:34|Steven Berghuis:34|Davy Klaassen:33|Jorrel Hato:20|Mika Godts:21|Youri Baas:23|Anton Gaaei:22|Ivan Perišić:37|Joël Drommel:32|Mauro Júnior:22|Mauro Icardi:33|İlkay Gündoğan:35|Davinson Sánchez:30|Kaan Ayhan:31|Lucas Torreira:30|Leroy Sané:30|Günay Güvenç:35|Metehan Baltacı:23|Abdülkerim Bardakcı:31|Óscar de Marcos:37|Aymeric Laporte:32|Yuri Berchiche:36|Iñaki Williams:32|Gorka Guruzeta:30|Mikel Jauregizar:22|Dani Parejo:37|Gerard Moreno:34|Étienne Capoue:38|Ayoze Pérez:33|Willy Kambwala:22|Alberto Moleiro:22|Kevin De Bruyne:35`.split('|').forEach(x=>{const i=x.lastIndexOf(':');AGES[nk(x.slice(0,i))]=+x.slice(i+1)});
+const ageOf=n=>AGES[nk(n)]||26;
+const gw=v=>v%10===1&&v%100!==11?'гол':(v%10>=2&&v%10<=4&&(v%100<10||v%100>=20))?'гола':'голов';
+const seasonNo=()=>season&&season.n?season.n:1;
+function ageUp(p){
+ const a=(+p.age||26)+1,eg=p.pos==='GK'?a-3:a;
+ let b=eg<=18?4:eg===19?3.5:eg===20?3:eg===21?2.5:eg===22?2:eg===23?1.2:eg===24?.7:eg===25?.3:eg<=28?0:eg===29?-.3:eg===30?-.8:eg===31?-1.3:eg===32?-1.8:eg===33?-2.4:eg===34?-3:-3.5;
+ const r=+p.rating;if(b>0)b*=Math.max(.25,1-Math.max(0,r-78)/25);
+ const nz=(Math.random()+Math.random()-1)*(b>1?2.2:1.6),nr=Math.max(45,Math.min(95,Math.round(r+b+nz))),d=nr-r;
+ return{age:a,rating:nr,d,value:Math.max(.5,+((+p.value)*Math.exp(.09*d)*(a<=21?1.08:a>=31?.85:1)).toFixed(1))};
+}
+async function fixAges(){
+ const J=players.filter(p=>!p.age);
+ for(let i=0;i<J.length;i+=10)await Promise.all(J.slice(i,i+10).map(p=>col('players').doc(p.id).update({age:ageOf(p.name)}).catch(()=>{})));
+}
+function adminSeason(){
+ return `<div class="card"><b>Сезон ${seasonNo()}</b><div class="mu" style="margin:4px 0 10px">Когда чемпионат и Лига чемпионов завершены, нажмите кнопку: победители запишутся в историю, игроки станут на год старше (молодые растут, возрастные слабеют), клубы получат призовые, а таблица и сетка очистятся.</div><button class="btn pr" onclick="nextSeason()">Завершить сезон и начать следующий</button></div>`;
+}
+async function nextSeason(){
+ const n=seasonNo(),open=matches.filter(m=>!m.done);
+ const mr=cupm.length?Math.max(...cupm.map(m=>m.r)):0,fin=cupm.filter(m=>m.r===mr),cp=fin.length===1&&fin[0].done?fin[0].w:'';
+ const lg=matches.length&&!open.length?standings()[0].id:'';
+ let warn='';if(!lg)warn+='Чемпионат не завершён, чемпион не запишется. ';if(!cp)warn+='Лига чемпионов не завершена, победитель не запишется. ';
+ if(!await dlg(warn+'Завершить сезон '+n+' и начать сезон '+(n+1)+'? Игроки станут на год старше, рейтинги и цены изменятся, таблица и сетка очистятся.',{cancel:1}))return;
+ try{
+  const G={};[...matches,...cupm].forEach(m=>((m.done&&m.ev)||[]).forEach(e=>{if(e.p){const g=G[e.p]=G[e.p]||{n:ruName(e.pn),c:e.s?m.a:m.h,v:0};g.v++}}));
+  const t=Object.values(G).sort((a,b)=>b.v-a.v)[0];
+  await col('hist').doc('s'+String(n).padStart(3,'0')).set({n,lg,lgn:lg?cname(lg):'',cp,cpn:cp?cname(cp):'',ts:t?t.n+', '+t.v+' '+gw(t.v)+' ('+cname(t.c)+')':''});
+  const ps=players.slice();
+  for(let i=0;i<ps.length;i+=10)await Promise.all(ps.slice(i,i+10).map(p=>col('players').doc(p.id).update(ageUp(p))));
+  for(const c of clubs)await col('clubs').doc(c.id).update({budget:+((+c.budget)+40+(c.id===lg?60:0)+(c.id===cp?80:0)).toFixed(1)});
+  for(const o of offers.filter(o=>o.status==='open'))await col('offers').doc(o.id).update({status:'rejected',note:'Сезон завершён'});
+  for(let i=0;i<cupm.length;i+=10)await Promise.all(cupm.slice(i,i+10).map(m=>col('cupm').doc(m.id).delete()));
+  for(const k of ['now','sched'])try{await col('live').doc(k).delete()}catch(e){}
+  await col('live').doc('season').set({n:n+1,ts:Date.now()});
+  tTab='hist';
+ }catch(e){return alert('Ошибка: '+(e.message||e.code))}
+ await startSeason();
+}
+function vHist(){
+ const L=hist.slice().sort((a,b)=>b.n-a.n);
+ if(!L.length)return '<div class="card mu">История появится после первого завершённого сезона. Администратор завершает сезон кнопкой в разделе «Админ».</div>';
+ const T={};L.forEach(h=>{[['lg',h.lg,h.lgn],['cp',h.cp,h.cpn]].forEach(([k,id,nm])=>{if(id){const x=T[id]=T[id]||{n:nm,id,lg:0,cp:0};x[k]++}})});
+ const top=Object.values(T).sort((a,b)=>(b.lg+b.cp)-(a.lg+a.cp)||b.cp-a.cp).slice(0,8);
+ return (top.length?`<div class="card"><h3>Зал славы</h3>${top.map(t=>`<div class="row">${clogo(t.id)}<div class="g"><b>${esc(t.n)}</b><div class="mu">Чемпион: ${t.lg} · Лига чемпионов: ${t.cp}</div></div></div>`).join('')}</div>`:'')+L.map(h=>`<div class="card"><b>Сезон ${h.n}</b><div class="row">${h.lg?clogo(h.lg):''}<div class="g"><div class="mu">Чемпион</div><b>${esc(h.lgn||'нет данных')}</b></div></div><div class="row">${h.cp?clogo(h.cp):''}<div class="g"><div class="mu">Лига чемпионов</div><b>${esc(h.cpn||'нет данных')}</b></div></div>${h.ts?`<div class="row"><div class="g"><div class="mu">Лучший бомбардир</div><b>${esc(h.ts)}</b></div></div>`:''}</div>`).join('');
+}
+/*ENDSEASON*/
+</script></body></html>
