@@ -116,6 +116,7 @@ td,.rt,.sc b,.st b{font-variant-numeric:tabular-nums}
 .bf{padding:4px 10px 6px;font-size:12px;color:var(--mu);border-top:1px solid var(--ln)}
 tr.q td:first-child{box-shadow:inset 3px 0 0 var(--am)}tr.me.q td:first-child{box-shadow:inset 3px 0 0 var(--ac)}
 .qd{display:inline-block;width:3px;height:12px;background:var(--am);margin-right:8px;vertical-align:-1px;border-radius:2px}
+.crest:not(.ph){background:none;clip-path:none}.crest svg{display:block;width:100%;height:100%}.crest:not(.ph) i{display:none}
 @keyframes sp{to{transform:rotate(1turn)}}
 @keyframes vi{from{opacity:0}}@keyframes fi{from{opacity:0;transform:translateY(-6px)}}@keyframes up{from{transform:translateY(40px);opacity:0}}
 @keyframes bl{50%{opacity:.5}}@keyframes goal{0%{background:rgba(255,180,0,.6)}100%{background:rgba(255,180,0,.13)}}
@@ -173,8 +174,37 @@ const ico=k=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke
 const hueOf=s=>{let h=0;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))%360;return h};
 function crestHtml(c,sz){
  if(c&&c.logo)return `<img class="logo ${sz||''}" src="${c.logo}" alt="">`;
- const n=String((c&&c.name)||'?').trim();
- return `<span class="crest ${sz||''}" style="--h:${hueOf(n)}"><i>${esc((n[0]||'?').toUpperCase())}</i></span>`;
+ return `<span class="crest ${sz||''}">${crestSvg(c)}</span>`;
+}
+const hs=s=>{let h=0;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))>>>0;return h};
+const CRD={realmadrid:['#f3f3f3','#c9a227','#c9a227','s','crown'],fcbarcelona:['#1b3a8c','#a50044','#edbb00','v','star'],manchestercity:['#6cabdd','#1c2c5b','#ffffff','s','diamond'],liverpool:['#c8102e','#8a0b20','#f6eb61','s','tower'],arsenal:['#ef0107','#f4f4f4','#ffffff','x','bolt'],bayernmunchen:['#dc052d','#0066b2','#ffffff','d','star'],parissaintgermain:['#0a1f44','#da291c','#ffffff','x','star'],manchesterunited:['#da291c','#fbe122','#ffffff','s','diamond'],chelsea:['#034694','#d1d3d4','#ffffff','s','star'],tottenhamhotspur:['#f4f4f4','#132257','#132257','s','bolt'],intermilan:['#0a1e5e','#111111','#ffffff','v','cross'],acmilan:['#e1001a','#111111','#ffffff','v','star'],juventus:['#f4f4f4','#111111','#111111','v','star'],atleticomadrid:['#cb3524','#f4f4f4','#1d2a6b','h','star'],borussiadortmund:['#fde100','#111111','#111111','s','bolt'],sscnapoli:['#12a0d7','#f4f4f4','#ffffff','s','ball'],newcastleunited:['#241f20','#f4f4f4','#ffffff','v','tower'],astonvilla:['#670e36','#95bfe5','#ffffff','s','diamond'],bayerleverkusen:['#e32221','#111111','#ffffff','d','bolt'],rbleipzig:['#dd0741','#f4f4f4','#ffffff','s','diamond'],asroma:['#8b1d2c','#f0bc42','#f0bc42','s','wave'],atalanta:['#1e71b8','#111111','#ffffff','v','star'],olympiquedemarseille:['#2faee0','#ffffff','#ffffff','s','star'],asmonaco:['#e8112d','#f4f4f4','#ffffff','d','diamond'],slbenfica:['#e30613','#f4f4f4','#ffffff','s','ball'],fcporto:['#00428c','#f4f4f4','#ffffff','v','ball'],sportingcp:['#00a859','#f4f4f4','#ffffff','h','star'],ajax:['#f4f4f4','#d2122e','#d2122e','x','cross'],psveindhoven:['#e30613','#f4f4f4','#ffffff','h','bolt'],galatasaray:['#a90432','#fdb913','#fdb913','d','star'],athleticclub:['#ee2523','#f4f4f4','#ffffff','v','tower'],villarreal:['#fbe10f','#005187','#005187','s','wave']};
+const GL={
+ star:(a,g)=>`<polygon points="20,13.5 22.3,19.2 28.4,19.5 23.6,23.3 25.3,29.2 20,25.8 14.7,29.2 16.4,23.3 11.6,19.5 17.7,19.2" fill="${g}"/>`,
+ crown:(a,g)=>`<path d="M12 29 L13.5 17 L17.5 22 L20 15 L22.5 22 L26.5 17 L28 29 Z" fill="${g}"/>`,
+ ball:(a,g)=>`<circle cx="20" cy="22" r="8.5" fill="${g}"/><polygon points="20,17.5 24,20.4 22.5,25 17.5,25 16,20.4" fill="${a}"/>`,
+ bolt:(a,g)=>`<path d="M22.5 13 L14 24 H19.5 L17.5 32 L26.5 20.5 H21 Z" fill="${g}"/>`,
+ tower:(a,g)=>`<path d="M13 31 V19 H15.5 V21.5 H17.5 V19 H19 V21.5 H21 V19 H22.5 V21.5 H24.5 V19 H27 V31 Z" fill="${g}"/>`,
+ wave:(a,g)=>`<path d="M11 20 q3 -4 6 0 t6 0 t6 0" fill="none" stroke="${g}" stroke-width="2.6"/><path d="M11 27 q3 -4 6 0 t6 0 t6 0" fill="none" stroke="${g}" stroke-width="2.6"/>`,
+ diamond:(a,g)=>`<polygon points="20,13 28.5,22 20,31 11.5,22" fill="${g}"/>`,
+ cross:(a,g)=>`<path d="M18 14 h4 v6 h6 v4 h-6 v8 h-4 v-8 h-6 v-4 h6 z" fill="${g}"/>`};
+function crestSvg(c){
+ const n=String((c&&c.name)||'?'),k=nk(n);let d=CRD[k];
+ if(!d){const h=hs(n),h1=h%360,h2=(h1+60+(h>>>3)%120)%360;d=[`hsl(${h1} 60% 36%)`,`hsl(${h2} 55% 58%)`,'#ffffff',['s','v','h','x','d'][h%5],['star','crown','ball','bolt','tower','diamond','wave'][(h>>>4)%7]]}
+ const[a,b,g,p,gl]=d,S='M20 1.5 L37 5 V26 C37 36 30 42 20 46.5 C10 42 3 36 3 26 V5 Z';
+ let f=`<rect x="3" y="1.5" width="34" height="45" fill="${a}"/>`;
+ if(p==='s')f+=`<rect x="3" y="1.5" width="34" height="10" fill="${b}"/>`;
+ else if(p==='v'){for(let i=1;i<5;i+=2)f+=`<rect x="${3+i*6.8}" y="1.5" width="6.8" height="45" fill="${b}"/>`}
+ else if(p==='h'){for(let i=1;i<5;i+=2)f+=`<rect x="3" y="${1.5+i*9}" width="34" height="9" fill="${b}"/>`}
+ else if(p==='x')f+=`<rect x="15" y="1.5" width="10" height="45" fill="${b}"/>`;
+ else f+=`<polygon points="3,30 37,8 37,22 3,44" fill="${b}"/>`;
+ return `<svg viewBox="0 0 40 48" aria-hidden="true"><defs><clipPath id="cs"><path d="${S}"/></clipPath></defs><g clip-path="url(#cs)">${f}</g><path d="${S}" fill="none" stroke="rgba(0,0,0,.4)" stroke-width="1.4"/><g stroke="rgba(0,0,0,.35)" stroke-width="1.2" paint-order="stroke">${GL[gl](a,g)}</g></svg>`;
+}
+function setLogo(el){
+ const f=el.files[0];if(!f)return;const im=new Image();
+ im.onload=async()=>{const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d'),s=Math.min(im.width,im.height);
+  x.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,96,96);
+  try{await col('clubs').doc(me).update({logo:c.toDataURL('image/webp',.8)})}catch(e){alert('Ошибка: '+(e.message||e.code))}};
+ im.src=URL.createObjectURL(f);
 }
 let authUser=null,bound=false,clubsReady=false,mpos='';
 const $=s=>document.querySelector(s);
@@ -184,549 +214,741 @@ let db,me,owner=false,clubs=[],players=[],matches=[],offers=[],live=null,sched=n
 const col=n=>db.collection(n);
 const myClub=()=>clubs.find(c=>c.id===me);
 const RAW=`Real Madrid
-Thibaut Courtois|GK|89|30
-Dani Carvajal|DEF|85|15
-Éder Militão|DEF|85|35
-Antonio Rüdiger|DEF|86|20
-Dean Huijsen|DEF|82|50
-Aurélien Tchouaméni|MID|85|80
-Federico Valverde|MID|88|120
-Jude Bellingham|MID|90|180
-Arda Güler|MID|83|70
-Vinícius Júnior|FWD|90|150
-Kylian Mbappé|FWD|91|180
-Andriy Lunin|GK|82|25
-Álvaro Carreras|DEF|80|30
-Ferland Mendy|DEF|82|25
-Eduardo Camavinga|MID|83|70
-Rodrygo|FWD|83|70
+Thibaut Courtois|GK|89|30|34
+Dani Carvajal|DEF|85|15|34
+Éder Militão|DEF|85|35|28
+Antonio Rüdiger|DEF|86|20|33
+Dean Huijsen|DEF|82|50|21
+Aurélien Tchouaméni|MID|85|80|26
+Federico Valverde|MID|88|120|28
+Jude Bellingham|MID|90|180|23
+Arda Güler|MID|83|70|21
+Vinícius Júnior|FWD|90|150|26
+Kylian Mbappé|FWD|91|180|27
+Andriy Lunin|GK|82|25|27
+Álvaro Carreras|DEF|80|30|23
+Ferland Mendy|DEF|82|25|31
+Eduardo Camavinga|MID|83|70|23
+Rodrygo|FWD|83|70|25
+Raúl Asencio|DEF|79|20|23
+Fran García|DEF|78|18|27
+Dani Ceballos|MID|79|10|30
+Brahim Díaz|MID|82|40|27
+Endrick|FWD|79|50|20
+Gonzalo García|FWD|75|12|22
 FC Barcelona
-Marc-André ter Stegen|GK|87|20
-Jules Koundé|DEF|86|60
-Pau Cubarsí|DEF|84|70
-Ronald Araújo|DEF|85|50
-Alejandro Balde|DEF|83|50
-Pedri|MID|87|100
-Frenkie de Jong|MID|86|50
-Gavi|MID|83|50
-Lamine Yamal|FWD|88|180
-Robert Lewandowski|FWD|87|12
-Raphinha|FWD|87|70
-Wojciech Szczęsny|GK|80|3
-Eric García|DEF|79|20
-Gerard Martín|DEF|78|20
-Dani Olmo|MID|83|50
-Ferran Torres|FWD|80|30
+Marc-André ter Stegen|GK|87|20|34
+Jules Koundé|DEF|86|60|27
+Pau Cubarsí|DEF|84|70|19
+Ronald Araújo|DEF|85|50|27
+Alejandro Balde|DEF|83|50|23
+Pedri|MID|87|100|23
+Frenkie de Jong|MID|86|50|29
+Gavi|MID|83|50|22
+Lamine Yamal|FWD|88|180|19
+Robert Lewandowski|FWD|87|12|38
+Raphinha|FWD|87|70|29
+Wojciech Szczęsny|GK|80|3|36
+Eric García|DEF|79|20|25
+Gerard Martín|DEF|78|20|24
+Dani Olmo|MID|83|50|28
+Ferran Torres|FWD|80|30|26
+Andreas Christensen|DEF|80|15|30
+Íñigo Martínez|DEF|82|12|35
+Marc Bernal|MID|79|25|19
+Pablo Torre|MID|75|10|23
+Marcus Rashford|FWD|83|45|29
+Roony Bardghji|FWD|76|12|20
 Manchester City
-Gianluigi Donnarumma|GK|88|45
-Joško Gvardiol|DEF|86|75
-Rúben Dias|DEF|88|75
-Nathan Aké|DEF|83|28
-Rodri|MID|90|110
-Bernardo Silva|MID|87|55
-Phil Foden|MID|86|110
-Tijjani Reijnders|MID|84|55
-Erling Haaland|FWD|91|200
-Jérémy Doku|FWD|83|60
-Rayan Cherki|FWD|83|60
-Stefan Ortega|GK|79|8
-Manuel Akanji|DEF|82|30
-Nico O'Reilly|DEF|80|40
-Mateo Kovačić|MID|81|25
-Omar Marmoush|FWD|83|60
+Gianluigi Donnarumma|GK|88|45|27
+Joško Gvardiol|DEF|86|75|24
+Rúben Dias|DEF|88|75|29
+Nathan Aké|DEF|83|28|31
+Rodri|MID|90|110|30
+Bernardo Silva|MID|87|55|32
+Phil Foden|MID|86|110|26
+Tijjani Reijnders|MID|84|55|28
+Erling Haaland|FWD|91|200|26
+Jérémy Doku|FWD|83|60|24
+Rayan Cherki|FWD|83|60|23
+Stefan Ortega|GK|79|8|33
+Manuel Akanji|DEF|82|30|31
+Nico O'Reilly|DEF|80|40|21
+Mateo Kovačić|MID|81|25|32
+Omar Marmoush|FWD|83|60|27
+Rico Lewis|DEF|80|35|21
+Abdukodir Khusanov|DEF|80|35|22
+Nico González|MID|82|35|24
+Claudio Echeverri|MID|76|15|20
+Savinho|FWD|82|60|22
+Oscar Bobb|FWD|79|30|23
 Liverpool
-Alisson|GK|89|30
-Jeremie Frimpong|DEF|82|40
-Virgil van Dijk|DEF|89|30
-Ibrahima Konaté|DEF|84|45
-Milos Kerkez|DEF|80|35
-Alexis Mac Allister|MID|86|70
-Dominik Szoboszlai|MID|85|80
-Florian Wirtz|MID|86|130
-Mohamed Salah|FWD|89|55
-Alexander Isak|FWD|86|100
-Cody Gakpo|FWD|84|60
-Giorgi Mamardashvili|GK|82|30
-Joe Gomez|DEF|79|20
-Conor Bradley|DEF|78|30
-Ryan Gravenberch|MID|85|80
-Hugo Ekitike|FWD|84|80
+Alisson|GK|89|30|34
+Jeremie Frimpong|DEF|82|40|25
+Virgil van Dijk|DEF|89|30|35
+Ibrahima Konaté|DEF|84|45|27
+Milos Kerkez|DEF|80|35|22
+Alexis Mac Allister|MID|86|70|27
+Dominik Szoboszlai|MID|85|80|26
+Florian Wirtz|MID|86|130|23
+Mohamed Salah|FWD|89|55|34
+Alexander Isak|FWD|86|100|27
+Cody Gakpo|FWD|84|60|27
+Giorgi Mamardashvili|GK|82|30|26
+Joe Gomez|DEF|79|20|29
+Conor Bradley|DEF|78|30|23
+Ryan Gravenberch|MID|85|80|24
+Hugo Ekitike|FWD|84|80|24
+Giovanni Leoni|DEF|74|10|19
+Kostas Tsimikas|DEF|78|10|30
+Curtis Jones|MID|80|35|25
+Wataru Endo|MID|77|5|33
+Federico Chiesa|FWD|79|15|28
+Rio Ngumoha|FWD|75|20|18
 Arsenal
-David Raya|GK|86|35
-Ben White|DEF|85|50
-William Saliba|DEF|87|80
-Gabriel Magalhães|DEF|87|75
-Riccardo Calafiori|DEF|84|55
-Declan Rice|MID|88|120
-Martin Ødegaard|MID|87|75
-Martín Zubimendi|MID|84|60
-Bukayo Saka|FWD|87|130
-Viktor Gyökeres|FWD|86|70
-Gabriel Martinelli|FWD|83|45
-Kepa Arrizabalaga|GK|78|5
-Jurriën Timber|DEF|83|60
-Myles Lewis-Skelly|DEF|78|35
-Eberechi Eze|MID|83|60
-Leandro Trossard|FWD|80|20
+David Raya|GK|86|35|31
+Ben White|DEF|85|50|29
+William Saliba|DEF|87|80|25
+Gabriel Magalhães|DEF|87|75|28
+Riccardo Calafiori|DEF|84|55|24
+Declan Rice|MID|88|120|27
+Martin Ødegaard|MID|87|75|27
+Martín Zubimendi|MID|84|60|27
+Bukayo Saka|FWD|87|130|25
+Viktor Gyökeres|FWD|86|70|28
+Gabriel Martinelli|FWD|83|45|25
+Kepa Arrizabalaga|GK|78|5|32
+Jurriën Timber|DEF|83|60|25
+Myles Lewis-Skelly|DEF|78|35|20
+Eberechi Eze|MID|83|60|28
+Leandro Trossard|FWD|80|20|31
+Cristhian Mosquera|DEF|78|20|22
+Piero Hincapié|DEF|82|40|24
+Mikel Merino|MID|82|35|30
+Christian Nørgaard|MID|77|8|32
+Noni Madueke|FWD|82|50|24
+Gabriel Jesus|FWD|80|25|29
 Bayern München
-Manuel Neuer|GK|86|4
-Joshua Kimmich|MID|87|40
-Dayot Upamecano|DEF|84|45
-Kim Min-jae|DEF|83|35
-Alphonso Davies|DEF|83|40
-Aleksandar Pavlović|MID|82|40
-Leon Goretzka|MID|82|25
-Jamal Musiala|MID|87|120
-Michael Olise|FWD|87|100
-Luis Díaz|FWD|85|75
-Harry Kane|FWD|90|100
-Jonas Urbig|GK|76|10
-Hiroki Ito|DEF|80|20
-Konrad Laimer|DEF|80|20
-Raphaël Guerreiro|MID|82|20
-Serge Gnabry|FWD|82|25
+Manuel Neuer|GK|86|4|40
+Joshua Kimmich|MID|87|40|31
+Dayot Upamecano|DEF|84|45|28
+Kim Min-jae|DEF|83|35|29
+Alphonso Davies|DEF|83|40|25
+Aleksandar Pavlović|MID|82|40|22
+Leon Goretzka|MID|82|25|31
+Jamal Musiala|MID|87|120|23
+Michael Olise|FWD|87|100|24
+Luis Díaz|FWD|85|75|29
+Harry Kane|FWD|90|100|33
+Jonas Urbig|GK|76|10|23
+Hiroki Ito|DEF|80|20|27
+Konrad Laimer|DEF|80|20|29
+Raphaël Guerreiro|MID|82|20|32
+Serge Gnabry|FWD|82|25|31
+Jonathan Tah|DEF|83|25|30
+Josip Stanišić|DEF|79|20|26
+Tom Bischof|MID|77|18|21
+Lennart Karl|MID|77|20|18
+Jonah Kusi-Asare|FWD|72|8|19
+Gabriel Vidovic|FWD|74|10|22
 Paris Saint-Germain
-Matvey Safonov|GK|82|20
-Achraf Hakimi|DEF|85|70
-Marquinhos|DEF|86|30
-Willian Pacho|DEF|84|55
-Nuno Mendes|DEF|87|75
-Vitinha|MID|87|90
-Fabián Ruiz|MID|84|45
-João Neves|MID|85|80
-Ousmane Dembélé|FWD|89|80
-Désiré Doué|FWD|85|90
-Khvicha Kvaratskhelia|FWD|87|90
-Lucas Chevalier|GK|82|35
-Lucas Beraldo|DEF|79|20
-Illia Zabarnyi|DEF|80|30
-Warren Zaïre-Emery|MID|82|80
-Bradley Barcola|FWD|84|70
+Matvey Safonov|GK|82|20|27
+Achraf Hakimi|DEF|85|70|27
+Marquinhos|DEF|86|30|32
+Willian Pacho|DEF|84|55|25
+Nuno Mendes|DEF|87|75|24
+Vitinha|MID|87|90|26
+Fabián Ruiz|MID|84|45|30
+João Neves|MID|85|80|22
+Ousmane Dembélé|FWD|89|80|29
+Désiré Doué|FWD|85|90|21
+Khvicha Kvaratskhelia|FWD|87|90|25
+Lucas Chevalier|GK|82|35|24
+Lucas Beraldo|DEF|79|20|22
+Illia Zabarnyi|DEF|80|30|24
+Warren Zaïre-Emery|MID|82|80|20
+Bradley Barcola|FWD|84|70|24
+Lucas Hernández|DEF|82|25|30
+Presnel Kimpembe|DEF|79|10|31
+Senny Mayulu|MID|79|30|20
+Carlos Soler|MID|78|15|29
+Gonçalo Ramos|FWD|80|35|25
+Ibrahim Mbaye|FWD|75|12|18
 Manchester United
-André Onana|GK|80|25
-Lisandro Martínez|DEF|83|45
-Matthijs de Ligt|DEF|82|40
-Harry Maguire|DEF|80|10
-Diogo Dalot|DEF|81|30
-Bruno Fernandes|MID|87|55
-Casemiro|MID|82|15
-Kobbie Mainoo|MID|80|55
-Bryan Mbeumo|FWD|84|70
-Matheus Cunha|FWD|84|70
-Benjamin Šeško|FWD|82|75
-Altay Bayındır|GK|76|5
-Leny Yoro|DEF|79|50
-Patrick Dorgu|DEF|77|30
-Youri Tielemans|MID|85|25
-Amad Diallo|FWD|81|45
+André Onana|GK|80|25|30
+Lisandro Martínez|DEF|83|45|28
+Matthijs de Ligt|DEF|82|40|27
+Harry Maguire|DEF|80|10|33
+Diogo Dalot|DEF|81|30|27
+Bruno Fernandes|MID|87|55|32
+Casemiro|MID|82|15|34
+Kobbie Mainoo|MID|80|55|21
+Bryan Mbeumo|FWD|84|70|27
+Matheus Cunha|FWD|84|70|27
+Benjamin Šeško|FWD|82|75|23
+Altay Bayındır|GK|76|5|28
+Leny Yoro|DEF|79|50|20
+Patrick Dorgu|DEF|77|30|22
+Youri Tielemans|MID|85|25|29
+Amad Diallo|FWD|81|45|24
+Luke Shaw|DEF|82|20|31
+Noussair Mazraoui|DEF|80|15|28
+Mason Mount|MID|79|25|27
+Manuel Ugarte|MID|80|30|25
+Joshua Zirkzee|FWD|78|20|25
+Chido Obi|FWD|72|5|19
 Chelsea
-Robert Sánchez|GK|80|25
-Reece James|DEF|84|55
-Levi Colwill|DEF|82|45
-Wesley Fofana|DEF|81|35
-Marc Cucurella|DEF|83|40
-Enzo Fernández|MID|85|85
-Moisés Caicedo|MID|85|90
-Cole Palmer|MID|87|130
-João Pedro|FWD|83|60
-Pedro Neto|FWD|82|55
-Nicolas Jackson|FWD|80|45
-Filip Jørgensen|GK|76|20
-Trevoh Chalobah|DEF|79|25
-Malo Gusto|DEF|79|35
-Andrey Santos|MID|79|40
-Estêvão|FWD|82|80
+Robert Sánchez|GK|80|25|28
+Reece James|DEF|84|55|26
+Levi Colwill|DEF|82|45|23
+Wesley Fofana|DEF|81|35|25
+Marc Cucurella|DEF|83|40|28
+Enzo Fernández|MID|85|85|25
+Moisés Caicedo|MID|85|90|24
+Cole Palmer|MID|87|130|24
+João Pedro|FWD|83|60|25
+Pedro Neto|FWD|82|55|26
+Nicolas Jackson|FWD|80|45|25
+Filip Jørgensen|GK|76|20|24
+Trevoh Chalobah|DEF|79|25|27
+Malo Gusto|DEF|79|35|23
+Andrey Santos|MID|79|40|22
+Estêvão|FWD|82|80|19
+Tosin Adarabioyo|DEF|79|15|29
+Benoît Badiashile|DEF|79|20|25
+Romeo Lavia|MID|79|25|22
+Dario Essugo|MID|75|20|21
+Alejandro Garnacho|FWD|80|40|22
+Liam Delap|FWD|79|35|23
 Tottenham Hotspur
-Guglielmo Vicario|GK|82|25
-Pedro Porro|DEF|83|40
-Cristian Romero|DEF|85|55
-Micky van de Ven|DEF|83|55
-Destiny Udogie|DEF|81|40
-João Palhinha|MID|82|35
-James Maddison|MID|83|40
-Xavi Simons|MID|83|70
-Mohammed Kudus|FWD|82|50
-Dominic Solanke|FWD|82|45
-Brennan Johnson|FWD|80|35
-Antonín Kinský|GK|75|15
-Radu Drăgușin|DEF|78|25
-Kevin Danso|DEF|79|25
-Sandro Tonali|MID|85|55
-Richarlison|FWD|79|20
+Guglielmo Vicario|GK|82|25|30
+Pedro Porro|DEF|83|40|27
+Cristian Romero|DEF|85|55|28
+Micky van de Ven|DEF|83|55|25
+Destiny Udogie|DEF|81|40|24
+João Palhinha|MID|82|35|31
+James Maddison|MID|83|40|29
+Xavi Simons|MID|83|70|23
+Mohammed Kudus|FWD|82|50|26
+Dominic Solanke|FWD|82|45|29
+Brennan Johnson|FWD|80|35|25
+Antonín Kinský|GK|75|15|23
+Radu Drăgușin|DEF|78|25|24
+Kevin Danso|DEF|79|25|28
+Sandro Tonali|MID|85|55|26
+Richarlison|FWD|79|20|29
+Ben Davies|DEF|76|3|33
+Djed Spence|DEF|79|20|26
+Rodrigo Bentancur|MID|81|25|29
+Pape Matar Sarr|MID|80|30|23
+Wilson Odobert|FWD|78|25|21
+Mathys Tel|FWD|77|25|21
 Inter Milan
-Yann Sommer|GK|83|8
-Alessandro Bastoni|DEF|87|70
-Francesco Acerbi|DEF|80|3
-Denzel Dumfries|DEF|82|30
-Federico Dimarco|DEF|84|40
-Nicolò Barella|MID|86|70
-Hakan Çalhanoğlu|MID|86|40
-Henrikh Mkhitaryan|MID|80|4
-Lautaro Martínez|FWD|88|100
-Marcus Thuram|FWD|86|70
-Pio Esposito|FWD|77|25
-Josep Martínez|GK|77|10
-Yann Bisseck|DEF|80|30
-Carlos Augusto|DEF|79|20
-Davide Frattesi|MID|80|30
-Ange-Yoan Bonny|FWD|78|20
+Yann Sommer|GK|83|8|37
+Alessandro Bastoni|DEF|87|70|27
+Francesco Acerbi|DEF|80|3|38
+Denzel Dumfries|DEF|82|30|30
+Federico Dimarco|DEF|84|40|28
+Nicolò Barella|MID|86|70|29
+Hakan Çalhanoğlu|MID|86|40|32
+Henrikh Mkhitaryan|MID|80|4|37
+Lautaro Martínez|FWD|88|100|29
+Marcus Thuram|FWD|86|70|29
+Pio Esposito|FWD|77|25|21
+Josep Martínez|GK|77|10|28
+Yann Bisseck|DEF|80|30|27
+Carlos Augusto|DEF|79|20|27
+Davide Frattesi|MID|80|30|26
+Ange-Yoan Bonny|FWD|78|20|23
+Matteo Darmian|DEF|78|5|37
+Stefan de Vrij|DEF|80|8|34
+Piotr Zieliński|MID|82|20|32
+Kristjan Asllani|MID|76|12|24
+Marko Arnautović|FWD|77|3|37
+Valentín Carboni|FWD|76|12|21
 AC Milan
-Mike Maignan|GK|87|35
-Fikayo Tomori|DEF|82|30
-Strahinja Pavlović|DEF|80|25
-Matteo Gabbia|DEF|78|12
-Pervis Estupiñán|DEF|80|25
-Luka Modrić|MID|84|4
-Adrien Rabiot|MID|83|30
-Youssouf Fofana|MID|80|25
-Christian Pulisic|FWD|83|45
-Rafael Leão|FWD|86|75
-Santiago Giménez|FWD|80|40
-Pietro Terracciano|GK|74|2
-Malick Thiaw|DEF|82|35
-Álex Jiménez|DEF|78|20
-Ruben Loftus-Cheek|MID|80|15
-Christopher Nkunku|FWD|82|35
+Mike Maignan|GK|87|35|31
+Fikayo Tomori|DEF|82|30|28
+Strahinja Pavlović|DEF|80|25|25
+Matteo Gabbia|DEF|78|12|27
+Pervis Estupiñán|DEF|80|25|28
+Luka Modrić|MID|84|4|41
+Adrien Rabiot|MID|83|30|31
+Youssouf Fofana|MID|80|25|27
+Christian Pulisic|FWD|83|45|28
+Rafael Leão|FWD|86|75|27
+Santiago Giménez|FWD|80|40|25
+Pietro Terracciano|GK|74|2|36
+Malick Thiaw|DEF|82|35|25
+Álex Jiménez|DEF|78|20|21
+Ruben Loftus-Cheek|MID|80|15|30
+Christopher Nkunku|FWD|82|35|28
+Davide Calabria|DEF|77|8|29
+Koni De Winter|DEF|76|12|24
+Samuele Ricci|MID|79|30|25
+Ardon Jashari|MID|78|25|24
+Alexis Saelemaekers|FWD|79|15|27
+Niclas Füllkrug|FWD|78|8|33
 Juventus
-Michele Di Gregorio|GK|81|18
-Gleison Bremer|DEF|85|50
-Pierre Kalulu|DEF|80|28
-Federico Gatti|DEF|79|25
-Andrea Cambiaso|DEF|82|45
-Manuel Locatelli|MID|82|35
-Khéphren Thuram|MID|82|40
-Teun Koopmeiners|MID|83|45
-Kenan Yıldız|FWD|85|90
-Dušan Vlahović|FWD|83|40
-Jonathan David|FWD|82|45
-Mattia Perin|GK|76|2
-Lloyd Kelly|DEF|79|20
-Alberto Costa|DEF|77|15
-Weston McKennie|MID|80|25
-Francisco Conceição|FWD|81|40
+Michele Di Gregorio|GK|81|18|29
+Gleison Bremer|DEF|85|50|29
+Pierre Kalulu|DEF|80|28|26
+Federico Gatti|DEF|79|25|28
+Andrea Cambiaso|DEF|82|45|26
+Manuel Locatelli|MID|82|35|28
+Khéphren Thuram|MID|82|40|25
+Teun Koopmeiners|MID|83|45|28
+Kenan Yıldız|FWD|85|90|21
+Dušan Vlahović|FWD|83|40|26
+Jonathan David|FWD|82|45|26
+Mattia Perin|GK|76|2|33
+Lloyd Kelly|DEF|79|20|28
+Alberto Costa|DEF|77|15|23
+Weston McKennie|MID|80|25|28
+Francisco Conceição|FWD|81|40|23
+Daniele Rugani|DEF|76|3|32
+Juan Cabal|DEF|77|15|25
+Nicolò Fagioli|MID|78|12|25
+Douglas Luiz|MID|78|18|28
+Lois Openda|FWD|79|30|26
+Arkadiusz Milik|FWD|77|4|32
 Atlético Madrid
-Jan Oblak|GK|86|20
-Marcos Llorente|DEF|82|30
-José María Giménez|DEF|83|25
-Robin Le Normand|DEF|82|30
-Nahuel Molina|DEF|81|25
-Koke|MID|82|8
-Pablo Barrios|MID|80|45
-Rodrigo De Paul|MID|83|25
-Antoine Griezmann|FWD|85|25
-Julián Álvarez|FWD|87|90
-Alexander Sørloth|FWD|80|25
-Juan Musso|GK|79|10
-Clément Lenglet|DEF|79|10
-David Hancko|DEF|80|30
-Conor Gallagher|MID|82|40
-Giuliano Simeone|FWD|80|30
+Jan Oblak|GK|86|20|33
+Marcos Llorente|DEF|82|30|31
+José María Giménez|DEF|83|25|31
+Robin Le Normand|DEF|82|30|29
+Nahuel Molina|DEF|81|25|28
+Koke|MID|82|8|34
+Pablo Barrios|MID|80|45|23
+Rodrigo De Paul|MID|83|25|32
+Antoine Griezmann|FWD|85|25|35
+Julián Álvarez|FWD|87|90|26
+Alexander Sørloth|FWD|80|25|30
+Juan Musso|GK|79|10|32
+Clément Lenglet|DEF|79|10|31
+David Hancko|DEF|80|30|28
+Conor Gallagher|MID|82|40|26
+Giuliano Simeone|FWD|80|30|23
+Matteo Ruggeri|DEF|78|15|24
+Marc Pubill|DEF|77|12|23
+Johnny Cardoso|MID|79|20|25
+Thiago Almada|MID|80|25|25
+Alex Baena|FWD|82|35|25
+Ángel Correa|FWD|78|8|31
 Borussia Dortmund
-Gregor Kobel|GK|86|45
-Nico Schlotterbeck|DEF|84|40
-Waldemar Anton|DEF|82|22
-Niklas Süle|DEF|79|12
-Julian Ryerson|DEF|80|22
-Felix Nmecha|MID|80|30
-Pascal Groß|MID|80|10
-Julian Brandt|MID|83|35
-Serhou Guirassy|FWD|85|55
-Karim Adeyemi|FWD|80|35
-Maximilian Beier|FWD|80|35
-Alexander Meyer|GK|77|5
-Ramy Bensebaini|DEF|80|10
-Daniel Svensson|DEF|78|20
-Marcel Sabitzer|MID|80|12
-Fábio Silva|FWD|78|20
+Gregor Kobel|GK|86|45|28
+Nico Schlotterbeck|DEF|84|40|26
+Waldemar Anton|DEF|82|22|30
+Niklas Süle|DEF|79|12|31
+Julian Ryerson|DEF|80|22|28
+Felix Nmecha|MID|80|30|26
+Pascal Groß|MID|80|10|35
+Julian Brandt|MID|83|35|30
+Serhou Guirassy|FWD|85|55|30
+Karim Adeyemi|FWD|80|35|24
+Maximilian Beier|FWD|80|35|24
+Alexander Meyer|GK|77|5|35
+Ramy Bensebaini|DEF|80|10|31
+Daniel Svensson|DEF|78|20|24
+Marcel Sabitzer|MID|80|12|32
+Fábio Silva|FWD|78|20|24
+Yan Couto|DEF|79|20|24
+Emre Can|DEF|79|8|32
+Jobe Bellingham|MID|79|35|20
+Carney Chukwuemeka|MID|77|20|22
+Jamie Gittens|FWD|78|25|22
+Julien Duranville|FWD|75|15|20
 SSC Napoli
-Alex Meret|GK|82|12
-Giovanni Di Lorenzo|DEF|82|12
-Alessandro Buongiorno|DEF|83|40
-Amir Rrahmani|DEF|82|25
-Leonardo Spinazzola|DEF|79|8
-Scott McTominay|MID|84|40
-Stanislav Lobotka|MID|82|28
-Billy Gilmour|MID|79|15
-David Neres|FWD|82|35
-Romelu Lukaku|FWD|81|8
-Rasmus Højlund|FWD|79|30
-Vanja Milinković-Savić|GK|79|15
-Sam Beukema|DEF|82|30
-Juan Jesus|DEF|76|2
-Antonio Vergara|MID|77|15
-Noa Lang|FWD|80|25
+Alex Meret|GK|82|12|29
+Giovanni Di Lorenzo|DEF|82|12|33
+Alessandro Buongiorno|DEF|83|40|27
+Amir Rrahmani|DEF|82|25|32
+Leonardo Spinazzola|DEF|79|8|33
+Scott McTominay|MID|84|40|29
+Stanislav Lobotka|MID|82|28|31
+Billy Gilmour|MID|79|15|25
+David Neres|FWD|82|35|29
+Romelu Lukaku|FWD|81|8|33
+Rasmus Højlund|FWD|79|30|23
+Vanja Milinković-Savić|GK|79|15|29
+Sam Beukema|DEF|82|30|27
+Juan Jesus|DEF|76|2|35
+Antonio Vergara|MID|77|15|24
+Noa Lang|FWD|80|25|27
+Mathias Olivera|DEF|79|15|28
+Pasquale Mazzocchi|DEF|76|5|31
+Eljif Elmas|MID|78|15|27
+Giacomo Raspadori|MID|78|12|26
+Matteo Politano|FWD|79|8|33
+Lorenzo Lucca|FWD|76|12|26
 Newcastle United
-Nick Pope|GK|80|8
-Kieran Trippier|DEF|80|8
-Sven Botman|DEF|83|45
-Fabian Schär|DEF|80|8
-Tino Livramento|DEF|82|40
-Joelinton|MID|82|35
-Joe Willock|MID|78|20
-Lewis Miley|MID|77|25
-Anthony Gordon|FWD|84|70
-Yoane Wissa|FWD|80|30
-Nick Woltemade|FWD|82|60
-Aaron Ramsdale|GK|78|15
-Dan Burn|DEF|78|8
-Lewis Hall|DEF|80|35
-Jacob Ramsey|MID|79|35
-Harvey Barnes|FWD|80|30
+Nick Pope|GK|80|8|34
+Kieran Trippier|DEF|80|8|36
+Sven Botman|DEF|83|45|26
+Fabian Schär|DEF|80|8|34
+Tino Livramento|DEF|82|40|23
+Joelinton|MID|82|35|30
+Joe Willock|MID|78|20|27
+Lewis Miley|MID|77|25|19
+Anthony Gordon|FWD|84|70|25
+Yoane Wissa|FWD|80|30|30
+Nick Woltemade|FWD|82|60|24
+Aaron Ramsdale|GK|78|15|28
+Dan Burn|DEF|78|8|34
+Lewis Hall|DEF|80|35|22
+Jacob Ramsey|MID|79|35|25
+Harvey Barnes|FWD|80|30|28
+Matt Targett|DEF|76|6|31
+Jamaal Lascelles|DEF|75|3|33
+Alex Murphy|DEF|70|3|21
+Sean Longstaff|MID|78|12|29
+Jacob Murphy|FWD|78|12|31
+Callum Wilson|FWD|77|5|34
 Aston Villa
-Emiliano Martínez|GK|85|25
-Matty Cash|DEF|80|25
-Ezri Konsa|DEF|82|30
-Pau Torres|DEF|81|25
-Lucas Digne|DEF|79|8
-John McGinn|MID|81|25
-Amadou Onana|MID|81|40
-Morgan Rogers|MID|84|80
-Ollie Watkins|FWD|82|40
-Leon Bailey|FWD|79|15
-Donyell Malen|FWD|80|35
-Marco Bizot|GK|76|5
-Tyrone Mings|DEF|77|5
-Ian Maatsen|DEF|79|30
-Boubacar Kamara|MID|82|35
-Jadon Sancho|FWD|79|25
+Emiliano Martínez|GK|85|25|34
+Matty Cash|DEF|80|25|29
+Ezri Konsa|DEF|82|30|29
+Pau Torres|DEF|81|25|29
+Lucas Digne|DEF|79|8|33
+John McGinn|MID|81|25|32
+Amadou Onana|MID|81|40|25
+Morgan Rogers|MID|84|80|24
+Ollie Watkins|FWD|82|40|30
+Leon Bailey|FWD|79|15|29
+Donyell Malen|FWD|80|35|27
+Marco Bizot|GK|76|5|35
+Tyrone Mings|DEF|77|5|33
+Ian Maatsen|DEF|79|30|24
+Boubacar Kamara|MID|82|35|26
+Jadon Sancho|FWD|79|25|26
+Andrés García|DEF|75|8|23
+Victor Lindelöf|DEF|79|8|32
+Ross Barkley|MID|77|5|32
+Lamare Bogarde|MID|75|10|22
+Evann Guessand|FWD|78|20|25
+Alysson|FWD|74|8|22
 Bayer Leverkusen
-Mark Flekken|GK|78|10
-Jeanuël Belocian|DEF|80|30
-Jarrell Quansah|DEF|80|30
-Edmond Tapsoba|DEF|82|35
-Alejandro Grimaldo|DEF|84|35
-Exequiel Palacios|MID|82|30
-Aleix García|MID|80|25
-Malik Tillman|MID|80|30
-Patrik Schick|FWD|82|30
-Christian Kofane|FWD|76|20
-Nathan Tella|FWD|78|15
-Janis Blaswich|GK|76|3
-Loïc Badé|DEF|78|15
-Nordi Mukiele|DEF|78|12
-Arthur Vermeeren|MID|79|25
-Martin Terrier|FWD|79|15
+Mark Flekken|GK|78|10|33
+Jeanuël Belocian|DEF|80|30|21
+Jarrell Quansah|DEF|80|30|23
+Edmond Tapsoba|DEF|82|35|27
+Alejandro Grimaldo|DEF|84|35|31
+Exequiel Palacios|MID|82|30|28
+Aleix García|MID|80|25|29
+Malik Tillman|MID|80|30|24
+Patrik Schick|FWD|82|30|30
+Christian Kofane|FWD|76|20|20
+Nathan Tella|FWD|78|15|27
+Janis Blaswich|GK|76|3|35
+Loïc Badé|DEF|78|15|25
+Nordi Mukiele|DEF|78|12|28
+Arthur Vermeeren|MID|79|25|21
+Martin Terrier|FWD|79|15|29
+Lucas Vázquez|DEF|78|5|35
+Arthur Augusto|DEF|75|8|23
+Robert Andrich|MID|80|18|32
+Ibrahim Maza|MID|78|20|21
+Emiliano Buendía|FWD|79|12|29
+Jonas Hofmann|FWD|79|10|34
 RB Leipzig
-Péter Gulácsi|GK|80|5
-Lutsharel Geertruida|DEF|82|35
-Castello Lukeba|DEF|84|60
-Willi Orbán|DEF|79|8
-David Raum|DEF|81|20
-Christoph Baumgartner|MID|80|30
-Nicolas Seiwald|MID|80|30
-Assan Ouédraogo|MID|77|25
-Yan Diomande|FWD|80|50
-Antonio Nusa|FWD|79|30
-Johan Bakayoko|FWD|80|30
-Maarten Vandevoordt|GK|79|20
-Ridle Baku|DEF|79|20
-Max Finkgräfe|DEF|77|12
-Amadou Haidara|MID|78|12
-Conrad Harder|FWD|77|20
+Péter Gulácsi|GK|80|5|36
+Lutsharel Geertruida|DEF|82|35|26
+Castello Lukeba|DEF|84|60|23
+Willi Orbán|DEF|79|8|33
+David Raum|DEF|81|20|28
+Christoph Baumgartner|MID|80|30|27
+Nicolas Seiwald|MID|80|30|25
+Assan Ouédraogo|MID|77|25|20
+Yan Diomande|FWD|80|50|19
+Antonio Nusa|FWD|79|30|21
+Johan Bakayoko|FWD|80|30|23
+Maarten Vandevoordt|GK|79|20|24
+Ridle Baku|DEF|79|20|28
+Max Finkgräfe|DEF|77|12|22
+Amadou Haidara|MID|78|12|28
+Conrad Harder|FWD|77|20|21
+Lukas Klostermann|DEF|77|5|30
+El Chadaille Bitshiabu|DEF|76|18|21
+Kevin Kampl|MID|77|3|36
+Xaver Schlager|MID|79|15|29
+Yussuf Poulsen|FWD|77|3|32
+Fábio Carvalho|FWD|76|15|24
 AS Roma
-Mile Svilar|GK|84|35
-Zeki Çelik|DEF|78|12
-Gianluca Mancini|DEF|81|18
-Evan Ndicka|DEF|82|30
-Angeliño|DEF|80|15
-Manu Koné|MID|83|40
-Lorenzo Pellegrini|MID|80|20
-Bryan Cristante|MID|79|10
-Paulo Dybala|FWD|82|10
-Artem Dovbyk|FWD|80|22
-Matías Soulé|FWD|81|40
-Pierluigi Gollini|GK|74|2
-Wesley França|DEF|78|20
-Mario Hermoso|DEF|80|10
-Niccolò Pisilli|MID|77|20
-Evan Ferguson|FWD|78|25
+Mile Svilar|GK|84|35|27
+Zeki Çelik|DEF|78|12|29
+Gianluca Mancini|DEF|81|18|30
+Evan Ndicka|DEF|82|30|27
+Angeliño|DEF|80|15|29
+Manu Koné|MID|83|40|25
+Lorenzo Pellegrini|MID|80|20|30
+Bryan Cristante|MID|79|10|31
+Paulo Dybala|FWD|82|10|32
+Artem Dovbyk|FWD|80|22|29
+Matías Soulé|FWD|81|40|23
+Pierluigi Gollini|GK|74|2|31
+Wesley França|DEF|78|20|22
+Mario Hermoso|DEF|80|10|31
+Niccolò Pisilli|MID|77|20|22
+Evan Ferguson|FWD|78|25|22
+Marash Kumbulla|DEF|76|5|26
+Daniele Ghilardi|DEF|75|8|23
+Leandro Paredes|MID|78|5|32
+Neil El Aynaoui|MID|79|20|25
+Tommaso Baldanzi|FWD|78|15|23
+Stephan El Shaarawy|FWD|77|3|34
 Atalanta
-Marco Carnesecchi|GK|83|30
-Berat Djimsiti|DEF|80|10
-Isak Hien|DEF|81|25
-Odilon Kossounou|DEF|80|25
-Raoul Bellanova|DEF|80|25
-Marten de Roon|MID|79|5
-Éderson|MID|82|35
-Lazar Samardžić|MID|80|30
-Ademola Lookman|FWD|84|60
-Charles De Ketelaere|FWD|82|40
-Gianluca Scamacca|FWD|80|30
-Rui Patrício|GK|77|2
-Sead Kolašinac|DEF|77|3
-Lorenzo Bernasconi|DEF|74|10
-Mario Pašalić|MID|80|15
-Nikola Krstović|FWD|77|20
+Marco Carnesecchi|GK|83|30|26
+Berat Djimsiti|DEF|80|10|33
+Isak Hien|DEF|81|25|27
+Odilon Kossounou|DEF|80|25|25
+Raoul Bellanova|DEF|80|25|26
+Marten de Roon|MID|79|5|35
+Éderson|MID|82|35|27
+Lazar Samardžić|MID|80|30|24
+Ademola Lookman|FWD|84|60|29
+Charles De Ketelaere|FWD|82|40|25
+Gianluca Scamacca|FWD|80|30|27
+Rui Patrício|GK|77|2|38
+Sead Kolašinac|DEF|77|3|33
+Lorenzo Bernasconi|DEF|74|10|23
+Mario Pašalić|MID|80|15|31
+Nikola Krstović|FWD|77|20|26
+Rafael Tolói|DEF|77|3|36
+Giorgio Scalvini|DEF|80|30|22
+Marco Brescianini|MID|77|15|26
+Yunus Musah|MID|77|12|23
+Daniel Maldini|FWD|77|10|24
+Kamaldeen Sulemana|FWD|76|8|24
 Olympique de Marseille
-Gerónimo Rulli|GK|80|12
-Amir Murillo|DEF|78|15
-Leonardo Balerdi|DEF|80|20
-CJ Egan-Riley|DEF|77|15
-Nuno Tavares|DEF|78|15
-Pierre-Emile Højbjerg|MID|82|15
-Matt O'Riley|MID|79|25
-Angel Gomes|MID|79|12
-Mason Greenwood|FWD|83|40
-Amine Gouiri|FWD|80|30
-Pierre-Emerick Aubameyang|FWD|77|3
-Jeffrey de Lange|GK|74|3
-Facundo Medina|DEF|78|15
-Benjamin Pavard|DEF|82|15
-Geoffrey Kondogbia|MID|78|6
-Igor Paixão|FWD|79|20
+Gerónimo Rulli|GK|80|12|34
+Amir Murillo|DEF|78|15|30
+Leonardo Balerdi|DEF|80|20|27
+CJ Egan-Riley|DEF|77|15|23
+Nuno Tavares|DEF|78|15|26
+Pierre-Emile Højbjerg|MID|82|15|31
+Matt O'Riley|MID|79|25|25
+Angel Gomes|MID|79|12|26
+Mason Greenwood|FWD|83|40|25
+Amine Gouiri|FWD|80|30|26
+Pierre-Emerick Aubameyang|FWD|77|3|37
+Jeffrey de Lange|GK|74|3|28
+Facundo Medina|DEF|78|15|27
+Benjamin Pavard|DEF|82|15|30
+Geoffrey Kondogbia|MID|78|6|33
+Igor Paixão|FWD|79|20|26
+Ulisses Garcia|DEF|75|8|30
+Derek Cornelius|DEF|76|8|28
+Bilal Nadir|MID|75|8|22
+Hamed Traorè|MID|76|10|26
+Timothy Weah|FWD|78|15|26
+Elye Wahi|FWD|76|10|23
 AS Monaco
-Philipp Köhn|GK|77|10
-Vanderson|DEF|79|25
-Thilo Kehrer|DEF|78|10
-Mohammed Salisu|DEF|79|15
-Caio Henrique|DEF|78|15
-Lamine Camara|MID|80|40
-Denis Zakaria|MID|78|15
-Maghnes Akliouche|MID|82|50
-Folarin Balogun|FWD|81|35
-Eliesse Ben Seghir|FWD|79|25
-Takumi Minamino|FWD|77|6
-Lukas Hradecky|GK|79|3
-Ismail Jakobs|DEF|77|12
-Christian Mawissa|DEF|74|15
-Aleksandr Golovin|MID|79|15
-George Ilenikhena|FWD|77|20
+Philipp Köhn|GK|77|10|28
+Vanderson|DEF|79|25|25
+Thilo Kehrer|DEF|78|10|30
+Mohammed Salisu|DEF|79|15|27
+Caio Henrique|DEF|78|15|29
+Lamine Camara|MID|80|40|22
+Denis Zakaria|MID|78|15|29
+Maghnes Akliouche|MID|82|50|23
+Folarin Balogun|FWD|81|35|25
+Eliesse Ben Seghir|FWD|79|25|21
+Takumi Minamino|FWD|77|6|31
+Lukas Hradecky|GK|79|3|36
+Ismail Jakobs|DEF|77|12|27
+Christian Mawissa|DEF|74|15|22
+Aleksandr Golovin|MID|79|15|30
+George Ilenikhena|FWD|77|20|20
+Eric Dier|DEF|78|8|32
+Kassoum Ouattara|DEF|74|8|20
+Paul Pogba|MID|78|8|33
+Edan Diop|MID|74|8|23
+Krépin Diatta|FWD|77|10|27
+Mika Biereth|FWD|78|20|23
 SL Benfica
-Anatoliy Trubin|GK|82|30
-Alexander Bah|DEF|78|15
-Nicolás Otamendi|DEF|78|3
-António Silva|DEF|82|40
-Samuel Dahl|DEF|77|12
-Florentino Luís|MID|79|18
-Orkun Kökçü|MID|82|30
-Fredrik Aursnes|MID|79|12
-Ángel Di María|FWD|79|4
-Vangelis Pavlidis|FWD|82|30
-Andreas Schjelderup|FWD|79|25
-Samuel Soares|GK|74|5
-Tomás Araújo|DEF|79|25
-Adrián Bajrami|DEF|74|8
-Richard Ríos|MID|80|30
-Arthur Cabral|FWD|77|10
+Anatoliy Trubin|GK|82|30|25
+Alexander Bah|DEF|78|15|28
+Nicolás Otamendi|DEF|78|3|38
+António Silva|DEF|82|40|23
+Samuel Dahl|DEF|77|12|27
+Florentino Luís|MID|79|18|26
+Orkun Kökçü|MID|82|30|25
+Fredrik Aursnes|MID|79|12|30
+Ángel Di María|FWD|79|4|38
+Vangelis Pavlidis|FWD|82|30|27
+Andreas Schjelderup|FWD|79|25|22
+Samuel Soares|GK|74|5|24
+Tomás Araújo|DEF|79|25|24
+Adrián Bajrami|DEF|74|8|21
+Richard Ríos|MID|80|30|26
+Arthur Cabral|FWD|77|10|28
+Jan-Niklas Beste|DEF|77|8|27
+Amar Dedić|DEF|77|12|24
+Enzo Barrenechea|MID|77|12|25
+Leandro Barreiro|MID|78|15|26
+Rafa Silva|FWD|80|15|33
+Zeki Amdouni|FWD|77|15|26
 FC Porto
-Diogo Costa|GK|85|40
-João Mário|DEF|78|15
-Jakub Kiwior|DEF|80|25
-Nehuén Pérez|DEF|79|15
-Francisco Moura|DEF|78|12
-Alan Varela|MID|80|25
-Victor Froholdt|MID|78|20
-Gabri Veiga|MID|79|25
-Samu Aghehowa|FWD|82|40
-Rodrigo Mora|FWD|80|30
-William Gomes|FWD|78|20
-Cláudio Ramos|GK|74|2
-Martim Fernandes|DEF|77|12
-Zaidu Sanusi|DEF|77|8
-Pepê|MID|80|25
-Oskar Pietuszewski|FWD|76|20
+Diogo Costa|GK|85|40|27
+João Mário|DEF|78|15|26
+Jakub Kiwior|DEF|80|25|26
+Nehuén Pérez|DEF|79|15|26
+Francisco Moura|DEF|78|12|26
+Alan Varela|MID|80|25|25
+Victor Froholdt|MID|78|20|20
+Gabri Veiga|MID|79|25|24
+Samu Aghehowa|FWD|82|40|22
+Rodrigo Mora|FWD|80|30|19
+William Gomes|FWD|78|20|20
+Cláudio Ramos|GK|74|2|34
+Martim Fernandes|DEF|77|12|20
+Zaidu Sanusi|DEF|77|8|29
+Pepê|MID|80|25|29
+Oskar Pietuszewski|FWD|76|20|18
+Thiago Silva|DEF|78|1|42
+Jan Bednarek|DEF|78|8|30
+Fábio Vieira|MID|78|15|26
+Stephen Eustáquio|MID|79|12|29
+Luuk de Jong|FWD|77|2|36
+Deniz Gül|FWD|76|10|22
 Sporting CP
-Rui Silva|GK|80|12
-Iván Fresneda|DEF|78|15
-Ousmane Diomande|DEF|81|30
-Gonçalo Inácio|DEF|83|40
-Maxi Araújo|DEF|79|20
-Morten Hjulmand|MID|83|40
-Pedro Gonçalves|MID|82|30
-Hidemasa Morita|MID|79|12
-Geovany Quenda|FWD|80|45
-Francisco Trincão|FWD|81|25
-Luis Suárez|FWD|82|30
-Franco Israel|GK|77|6
-Zeno Debast|DEF|80|20
-Eduardo Quaresma|DEF|78|15
-Daniel Bragança|MID|78|15
-Fotis Ioannidis|FWD|77|10
+Rui Silva|GK|80|12|32
+Iván Fresneda|DEF|78|15|21
+Ousmane Diomande|DEF|81|30|23
+Gonçalo Inácio|DEF|83|40|25
+Maxi Araújo|DEF|79|20|26
+Morten Hjulmand|MID|83|40|27
+Pedro Gonçalves|MID|82|30|28
+Hidemasa Morita|MID|79|12|31
+Geovany Quenda|FWD|80|45|19
+Francisco Trincão|FWD|81|25|26
+Luis Suárez|FWD|82|30|28
+Franco Israel|GK|77|6|26
+Zeno Debast|DEF|80|20|23
+Eduardo Quaresma|DEF|78|15|24
+Daniel Bragança|MID|78|15|27
+Fotis Ioannidis|FWD|77|10|26
+Ricardo Mangas|DEF|75|4|28
+Matheus Reis|DEF|76|6|31
+Pedro Lima|MID|75|8|23
+João Simões|MID|77|12|19
+Nuno Santos|FWD|77|10|31
+Alisson Santos|FWD|78|20|22
 Ajax
-Vítězslav Jaroš|GK|76|8
-Jorrel Hato|DEF|80|35
-Anton Gaaei|DEF|77|12
-Josip Šutalo|DEF|78|20
-Youri Baas|DEF|77|15
-Kenneth Taylor|MID|79|25
-Jordan Henderson|MID|76|2
-Mika Godts|MID|79|25
-Brian Brobbey|FWD|80|30
-Wout Weghorst|FWD|76|3
-Steven Berghuis|FWD|76|4
-Remko Pasveer|GK|74|1
-Lucas Rosa|DEF|76|8
-Devyne Rensch|DEF|76|10
-Davy Klaassen|MID|77|6
-Christian Rasmussen|FWD|75|8
+Vítězslav Jaroš|GK|76|8|25
+Jorrel Hato|DEF|80|35|20
+Anton Gaaei|DEF|77|12|23
+Josip Šutalo|DEF|78|20|26
+Youri Baas|DEF|77|15|23
+Kenneth Taylor|MID|79|25|24
+Jordan Henderson|MID|76|2|36
+Mika Godts|MID|79|25|21
+Brian Brobbey|FWD|80|30|24
+Wout Weghorst|FWD|76|3|34
+Steven Berghuis|FWD|76|4|34
+Remko Pasveer|GK|74|1|42
+Lucas Rosa|DEF|76|8|22
+Devyne Rensch|DEF|76|10|23
+Davy Klaassen|MID|77|6|33
+Christian Rasmussen|FWD|75|8|23
+Anass Salah-Eddine|DEF|76|10|24
+Jakov Medić|DEF|74|5|27
+Branco van den Boomen|MID|75|3|31
+Jorthy Mokio|MID|76|15|18
+Oscar Gloukh|FWD|77|15|22
+Bertrand Traoré|FWD|76|3|31
 PSV Eindhoven
-Matej Kovář|GK|77|8
-Jordan Teze|DEF|78|15
-Ryan Flamingo|DEF|76|10
-Sergiño Dest|DEF|79|25
-Mauro Júnior|DEF|78|15
-Jerdy Schouten|MID|79|12
-Ismael Saibari|MID|81|30
-Joey Veerman|MID|80|25
-Couhaib Driouech|FWD|77|10
-Ricardo Pepi|FWD|77|12
-Dennis Man|FWD|77|8
-Joël Drommel|GK|74|2
-Olivier Boscagli|DEF|79|12
-Armando Obispo|DEF|75|5
-Guus Til|MID|77|10
-Ivan Perišić|FWD|77|2
+Matej Kovář|GK|77|8|26
+Jordan Teze|DEF|78|15|27
+Ryan Flamingo|DEF|76|10|24
+Sergiño Dest|DEF|79|25|25
+Mauro Júnior|DEF|78|15|22
+Jerdy Schouten|MID|79|12|29
+Ismael Saibari|MID|81|30|25
+Joey Veerman|MID|80|25|27
+Couhaib Driouech|FWD|77|10|26
+Ricardo Pepi|FWD|77|12|23
+Dennis Man|FWD|77|8|28
+Joël Drommel|GK|74|2|29
+Olivier Boscagli|DEF|79|12|28
+Armando Obispo|DEF|75|5|27
+Guus Til|MID|77|10|28
+Ivan Perišić|FWD|77|2|37
+Matteo Dams|DEF|75|5|24
+Rick Karsdorp|DEF|75|4|31
+Isaac Babadi|MID|74|6|23
+Tygo Land|MID|72|3|21
+Hirving Lozano|FWD|77|6|31
+Esmir Bajraktarević|FWD|75|10|21
 Galatasaray
-Uğurcan Çakır|GK|80|12
-Wilfried Singo|DEF|79|20
-Davinson Sánchez|DEF|78|8
-Abdülkerim Bardakcı|DEF|77|8
-Eren Elmalı|DEF|76|10
-Lucas Torreira|MID|80|12
-Gabriel Sara|MID|82|30
-İlkay Gündoğan|MID|81|8
-Barış Alper Yılmaz|FWD|80|25
-Victor Osimhen|FWD|86|75
-Leroy Sané|FWD|82|25
-Günay Güvenç|GK|74|2
-Kaan Ayhan|DEF|76|5
-Metehan Baltacı|DEF|75|5
-Yunus Akgün|MID|78|15
-Mauro Icardi|FWD|79|4
+Uğurcan Çakır|GK|80|12|30
+Wilfried Singo|DEF|79|20|25
+Davinson Sánchez|DEF|78|8|30
+Abdülkerim Bardakcı|DEF|77|8|32
+Eren Elmalı|DEF|76|10|26
+Lucas Torreira|MID|80|12|30
+Gabriel Sara|MID|82|30|27
+İlkay Gündoğan|MID|81|8|36
+Barış Alper Yılmaz|FWD|80|25|26
+Victor Osimhen|FWD|86|75|27
+Leroy Sané|FWD|82|25|30
+Günay Güvenç|GK|74|2|35
+Kaan Ayhan|DEF|76|5|31
+Metehan Baltacı|DEF|75|5|23
+Yunus Akgün|MID|78|15|26
+Mauro Icardi|FWD|79|4|33
+Eyüp Aydın|DEF|72|3|20
+Derrick Köhn|DEF|76|6|27
+Mario Lemina|MID|78|5|33
+Berkan Kutlu|MID|76|6|28
+Ahmed Kutucu|FWD|73|4|26
+Roland Sallai|FWD|77|8|29
 Athletic Club
-Unai Simón|GK|84|30
-Óscar de Marcos|DEF|76|1
-Dani Vivian|DEF|82|35
-Aymeric Laporte|DEF|82|10
-Yuri Berchiche|DEF|78|5
-Mikel Jauregizar|MID|80|35
-Oihan Sancet|MID|82|40
-Álex Berenguer|MID|78|12
-Iñaki Williams|FWD|80|15
-Nico Williams|FWD|85|80
-Gorka Guruzeta|FWD|78|12
-Julen Agirrezabala|GK|76|6
-Adama Boiro|DEF|76|8
-Yeray Álvarez|DEF|80|15
-Beñat Prados|MID|76|10
-Maroan Sannadi|FWD|74|8
+Unai Simón|GK|84|30|29
+Óscar de Marcos|DEF|76|1|37
+Dani Vivian|DEF|82|35|27
+Aymeric Laporte|DEF|82|10|32
+Yuri Berchiche|DEF|78|5|36
+Mikel Jauregizar|MID|80|35|22
+Oihan Sancet|MID|82|40|26
+Álex Berenguer|MID|78|12|31
+Iñaki Williams|FWD|80|15|32
+Nico Williams|FWD|85|80|24
+Gorka Guruzeta|FWD|78|12|30
+Julen Agirrezabala|GK|76|6|26
+Adama Boiro|DEF|76|8|24
+Yeray Álvarez|DEF|80|15|31
+Beñat Prados|MID|76|10|25
+Maroan Sannadi|FWD|74|8|24
+Unai Egiluz|DEF|74|8|23
+Aitor Paredes|DEF|75|8|26
+Unai Gómez|MID|76|12|22
+Iñigo Ruiz de Galarreta|MID|76|3|33
+Asier Villalibre|FWD|74|4|28
+Álvaro Djaló|FWD|75|6|26
 Villarreal
-Luiz Júnior|GK|78|8
-Juan Foyth|DEF|80|15
-Rafa Marín|DEF|79|20
-Willy Kambwala|DEF|77|10
-Alfonso Pedraza|DEF|78|8
-Pape Gueye|MID|79|15
-Dani Parejo|MID|79|3
-Santi Comesaña|MID|79|15
-Gerard Moreno|FWD|79|8
-Ayoze Pérez|FWD|78|5
-Alberto Moleiro|FWD|83|50
-Arnau Tenas|GK|72|2
-Sergi Cardona|DEF|77|8
-Logan Costa|DEF|78|12
-Étienne Capoue|MID|77|3
-Tajon Buchanan|FWD|77|10`;
+Luiz Júnior|GK|78|8|25
+Juan Foyth|DEF|80|15|28
+Rafa Marín|DEF|79|20|24
+Willy Kambwala|DEF|77|10|22
+Alfonso Pedraza|DEF|78|8|30
+Pape Gueye|MID|79|15|27
+Dani Parejo|MID|79|3|37
+Santi Comesaña|MID|79|15|29
+Gerard Moreno|FWD|79|8|34
+Ayoze Pérez|FWD|78|5|33
+Alberto Moleiro|FWD|83|50|23
+Arnau Tenas|GK|72|2|25
+Sergi Cardona|DEF|77|8|27
+Logan Costa|DEF|78|12|25
+Étienne Capoue|MID|77|3|38
+Tajon Buchanan|FWD|77|10|27
+Renato Veiga|DEF|78|15|22
+Eric Bailly|DEF|76|3|32
+Manu Trigueros|MID|77|3|34
+Nicolas Pépé|FWD|77|6|31
+Thierno Barry|FWD|78|20|23
+Yeremy Pino|FWD|80|35|23`;
 const PRE=[];RAW.split(/\r?\n/).forEach(l=>{if(!l.includes('|'))PRE.push({id:'pre'+PRE.length,name:l.trim(),pl:[]});else PRE[PRE.length-1].pl.push(l.split('|'))});
 const RATES={"Thibaut Courtois": 90, "Jude Bellingham": 90, "Kylian Mbappé": 91, "Vinícius Júnior": 89, "Pedri": 90, "Lamine Yamal": 90, "Raphinha": 88, "Pau Cubarsí": 86, "Erling Haaland": 91, "Rodri": 90, "Gianluigi Donnarumma": 89, "Rúben Dias": 87, "Rayan Cherki": 86, "Virgil van Dijk": 88, "Alisson": 87, "Florian Wirtz": 86, "Alexander Isak": 86, "Mohamed Salah": 87, "Gabriel Magalhães": 89, "William Saliba": 88, "David Raya": 87, "Declan Rice": 88, "Bukayo Saka": 87, "Martin Ødegaard": 86, "Viktor Gyökeres": 86, "Harry Kane": 90, "Michael Olise": 90, "Joshua Kimmich": 88, "Luis Díaz": 88, "Ousmane Dembélé": 90, "Vitinha": 90, "Khvicha Kvaratskhelia": 89, "Nuno Mendes": 89, "Willian Pacho": 89, "João Neves": 88, "Marquinhos": 87, "Bruno Fernandes": 89, "Enzo Fernández": 86, "Moisés Caicedo": 86, "Cole Palmer": 85, "Mike Maignan": 87, "Lautaro Martínez": 87, "Nico Schlotterbeck": 87, "Jan Oblak": 88, "Scott McTominay": 86, "Federico Dimarco": 86, "Sandro Tonali": 85, "Youri Tielemans": 85, "Emiliano Martínez": 85};
 PRE.forEach(c=>c.pl.forEach(x=>{if(RATES[x[0]])x[2]=RATES[x[0]]}));
@@ -784,7 +1006,7 @@ function vClub0(){
  const c=myClub();
  if(!c)return claimCard()+`<div class="card"><h3>Или создайте свой клуб</h3><input id="nm" placeholder="Название клуба" value="${esc(newName)}" oninput="newName=this.value"><input type="file" accept="image/*" onchange="pickLogo(this)">${newLogo?`<img class="logo big" src="${newLogo}">`:''}<button class="btn pr" onclick="makeClub()">Создать (бюджет €300 млн)</button></div>`;
  const sq=players.filter(p=>p.club===me).sort((a,b)=>b.rating-a.rating);
- return `<section class="hero"><div class="hh">${crestHtml(c,'lg')}<div class="g"><h2>${esc(c.name)}</h2><div class="sub">Схема ${fmOf(me)} · игроков: ${sq.length}</div></div><button class="btn gh" onclick="leaveClub()">Сменить</button></div><div class="st"><div><b>${M(c.budget).replace(' млн','M')}</b><span>Бюджет</span></div><div><b>${sq.length?strength(me).toFixed(1):'—'}</b><span>Сила команды</span></div><div><b>${lineup(me).filter(r=>r.p).length}/11</b><span>В старте</span></div></div></section>
+ return `<section class="hero"><div class="hh">${crestHtml(c,'lg')}<div class="g"><h2>${esc(c.name)}</h2><div class="sub">Схема ${fmOf(me)} · игроков: ${sq.length}</div></div><div style="display:flex;flex-direction:column;gap:6px"><button class="btn gh" onclick="leaveClub()">Сменить</button><label class="btn gh" style="cursor:pointer;text-align:center">Эмблема<input type="file" accept="image/*" hidden onchange="setLogo(this)"></label></div></div><div class="st"><div><b>${M(c.budget).replace(' млн','M')}</b><span>Бюджет</span></div><div><b>${sq.length?strength(me).toFixed(1):'—'}</b><span>Сила команды</span></div><div><b>${lineup(me).filter(r=>r.p).length}/11</b><span>В старте</span></div></div></section>
  ${lineupCard(sq)}`;
 }
 function vMarket(){
@@ -811,7 +1033,7 @@ function vMatches0(){
  const nav=`<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px"><button class="btn" ${i?'':'disabled'} onclick="mrd=${rs[i-1]};render()">‹</button><b>Тур ${r} из ${rs.length}</b><button class="btn" ${i<rs.length-1?'':'disabled'} onclick="mrd=${rs[i+1]};render()">›</button></div>`;
  return nav+`<div class="card">${matches.filter(m=>m.round===r).sort((x,y)=>x.id.localeCompare(y.id)).map(m=>`<div class="row">${clogo(m.h)}<div class="g">${esc(cname(m.h))}</div><b>${m.done?m.hg+' : '+m.ag:'– : –'}</b><div class="g" style="text-align:right">${esc(cname(m.a))}</div>${clogo(m.a)}</div>`).join('')}</div>`;
 }
-function vAdmin(){return adminSeason()+adminWin()+adminLive()+adminCup()+adminSched()+vAdmin0()}
+function vAdmin(){return adminSeason()+adminClubs()+adminWin()+adminLive()+adminCup()+adminSched()+vAdmin0()}
 function vAdmin0(){
  return `<div class="card"><b>База игроков</b><p class="mu">CSV: имя, позиция, рейтинг, стоимость (в млн €). Если игрок уже есть в лиге, ему обновятся рейтинг и цена, а новые игроки добавятся как свободные агенты. Позиции можно писать и как в игре (ST, CM, CB).</p><input type="file" accept=".csv,.txt" onchange="importCsv(this)"><button class="btn" onclick="seed()">Загрузить составы клубов</button> <button class="btn" onclick="dedupe()">Убрать дубли игроков</button><p class="mu">Игроков в базе: ${players.length}</p></div>
  <div class="card"><b>Чемпионат</b><p class="mu">Клубов: ${allClubs().length}. Кругов выбирается при запуске: один (каждый с каждым) или два (дома и в гостях).</p><button class="btn pr" onclick="startSeason()">Начать новый сезон</button> <button class="btn pr" onclick="goLive()">📺 Следующий матч в эфир</button> <button class="btn" onclick="playRound()">Сыграть тур сразу</button></div>`;
@@ -892,9 +1114,10 @@ async function playRound(){
 }
 
 function claimCard(){
- const free=PRE.filter(p=>!clubs.some(c=>c.preset===p.id)&&players.some(x=>x.club===p.id));
- if(!free.length)return players.some(p=>/^pre\d+_/.test(p.id))?'':'<div class="card mu"><div class="spin"></div>Готовим клубы, это займёт несколько секунд…</div>';
- return `<div class="card"><h3>Выберите клуб</h3><div class="mu" style="margin:-4px 0 12px">Бюджет 150 млн €. Выбранный клуб сразу станет вашим, другой игрок его взять уже не сможет.</div><div class="tiles">${free.map(p=>`<button class="tile" onclick="pickClub('${p.id}')">${crestHtml({id:p.id,name:p.name},'lg')}<b>${esc(p.name)}</b><span>Сила ${strength(p.id).toFixed(1)}</span></button>`).join('')}</div></div>`;
+ const seeded=PRE.filter(p=>players.some(x=>x.id.startsWith(p.id+'_')));
+ if(!seeded.length)return '<div class="card mu"><div class="spin"></div>Готовим клубы, это займёт несколько секунд…</div>';
+ const taken=p=>clubs.some(c=>c.preset===p.id);
+ return `<div class="card"><h3>Выберите клуб</h3><div class="mu" style="margin:-4px 0 12px">Бюджет 150 млн €. Выбранный клуб сразу станет вашим, другой игрок его взять уже не сможет. Занятые клубы серые.</div><div class="tiles">${seeded.map(p=>taken(p)?(owner?(c=>`<div class="tile">${crestHtml({id:p.id,name:p.name},'lg')}<b>${esc(p.name)}</b><span>Занят: ${esc(c.name)}</span><button class="btn" onclick="releaseClub('${c.id}')">Освободить</button></div>`)(clubs.find(c=>c.preset===p.id)):`<button class="tile" disabled style="opacity:.45">${crestHtml({id:p.id,name:p.name},'lg')}<b>${esc(p.name)}</b><span>Занят</span></button>`):`<button class="tile" onclick="pickClub('${p.id}')">${crestHtml({id:p.id,name:p.name},'lg')}<b>${esc(p.name)}</b><span>Сила ${strength(p.id).toFixed(1)}</span></button>`).join('')}</div></div>`;
 }
 async function pickClub(id){const p=PRE.find(x=>x.id===id);if(p&&await dlg('Взять клуб «'+p.name+'»?',{cancel:1}))claim(id)}
 async function claim(id){
@@ -916,7 +1139,7 @@ async function dedupe(){
 async function seed(){
  const jobs=[];
  for(const c of PRE)for(let i=0;i<c.pl.length;i++){const id=c.id+'_'+i;if(players.some(p=>p.id===id))continue;
-  const[n,pos,r,v]=c.pl[i];jobs.push(()=>col('players').doc(id).set({name:n,pos:pos,rating:+r,value:+v,club:((clubs.find(x=>x.preset===c.id)||{}).id)||c.id,listed:false,price:0,age:ageOf(n)}))}
+  const[n,pos,r,v,ag]=c.pl[i];jobs.push(()=>col('players').doc(id).set({name:n,pos:pos,rating:+r,value:+v,club:((clubs.find(x=>x.preset===c.id)||{}).id)||c.id,listed:false,price:0,age:+ag||ageOf(n),av:2}))}
  for(let i=0;i<jobs.length;i+=10)await Promise.all(jobs.slice(i,i+10).map(f=>f()));
 }
 function vDeals0(){
@@ -1438,9 +1661,10 @@ function ageUp(p){
  const nz=(Math.random()+Math.random()-1)*(b>1?2.2:1.6),nr=Math.max(45,Math.min(95,Math.round(r+b+nz))),d=nr-r;
  return{age:a,rating:nr,d,value:Math.max(.5,+((+p.value)*Math.exp(.09*d)*(a<=21?1.08:a>=31?.85:1)).toFixed(1))};
 }
+const AGEBYID={};PRE.forEach(c=>c.pl.forEach((x,i)=>{AGEBYID[c.id+'_'+i]=+x[4]||0}));
 async function fixAges(){
- const J=players.filter(p=>!p.age);
- for(let i=0;i<J.length;i+=10)await Promise.all(J.slice(i,i+10).map(p=>col('players').doc(p.id).update({age:ageOf(p.name)}).catch(()=>{})));
+ const J=players.filter(p=>!p.av),first=seasonNo()===1;
+ for(let i=0;i<J.length;i+=10)await Promise.all(J.slice(i,i+10).map(p=>{const t=AGEBYID[p.id]||p.age||ageOf(p.name);return col('players').doc(p.id).update(first||!p.age?{age:t,av:2}:{av:2}).catch(()=>{})}));
 }
 function adminSeason(){
  return `<div class="card"><b>Сезон ${seasonNo()}</b><div class="mu" style="margin:4px 0 10px">Когда чемпионат и Лига чемпионов завершены, нажмите кнопку: победители запишутся в историю, игроки станут на год старше (молодые растут, возрастные слабеют), клубы получат призовые, а таблица и сетка очистятся.</div><button class="btn pr" onclick="nextSeason()">Завершить сезон и начать следующий</button></div>`;
@@ -1474,4 +1698,19 @@ function vHist(){
  return (top.length?`<div class="card"><h3>Зал славы</h3>${top.map(t=>`<div class="row">${clogo(t.id)}<div class="g"><b>${esc(t.n)}</b><div class="mu">Чемпион: ${t.lg} · Лига чемпионов: ${t.cp}</div></div></div>`).join('')}</div>`:'')+L.map(h=>`<div class="card"><b>Сезон ${h.n}</b><div class="row">${h.lg?clogo(h.lg):''}<div class="g"><div class="mu">Чемпион</div><b>${esc(h.lgn||'нет данных')}</b></div></div><div class="row">${h.cp?clogo(h.cp):''}<div class="g"><div class="mu">Лига чемпионов</div><b>${esc(h.cpn||'нет данных')}</b></div></div>${h.ts?`<div class="row"><div class="g"><div class="mu">Лучший бомбардир</div><b>${esc(h.ts)}</b></div></div>`:''}</div>`).join('');
 }
 /*ENDSEASON*/
+
+function adminClubs(){
+ return `<div class="card"><b>Клубы игроков</b><div class="mu" style="margin:4px 0 10px">Если клуб занят «мёртвым» тестовым аккаунтом (например, Real Madrid или Barcelona), освободите его: игроки вернутся в исходный клуб, и его снова можно будет выбрать.</div>${clubs.map(c=>`<div class="row">${clogo(c.id)}<div class="g"><b>${esc(c.name)}</b><div class="mu">${c.preset?'готовый клуб':'свой клуб'} · ${M(c.budget)}</div></div><button class="btn" onclick="releaseClub('${c.id}')">Освободить</button></div>`).join('')||'<div class="mu">Клубов игроков пока нет.</div>'}</div>`;
+}
+async function releaseClub(id){
+ const c=clubs.find(x=>x.id===id);if(!c)return;
+ if(!await dlg('Освободить клуб «'+c.name+'»? Его игроки вернутся в исходный клуб или станут свободными агентами.',{cancel:1}))return;
+ try{
+  for(const x of players.filter(x=>x.club===id))await col('players').doc(x.id).update({club:c.preset&&x.id.startsWith(c.preset+'_')?c.preset:'',listed:false});
+  for(const o of offers.filter(o=>o.status==='open'&&(o.buyer===id||o.seller===id)))await col('offers').doc(o.id).update({status:'rejected',note:'Клуб расформирован'});
+  if(c.preset)try{await col('claims').doc(c.preset).delete()}catch(e){}
+  if(c.nk)try{await col('names').doc(c.nk).delete()}catch(e){}
+  await col('clubs').doc(id).delete();
+ }catch(e){alert('Ошибка: '+(e.message||e.code))}
+}
 </script></body></html>
